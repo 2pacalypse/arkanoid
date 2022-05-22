@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 public class Ball{
 	
 	public static final int startX = 300;
-	public static final int startY = 300;
+	public static final int startY = 550;
 	public static final int startR = 25;
 	
 	public static final int startVelocityX = 2;
@@ -31,7 +31,7 @@ public class Ball{
 		setCurrentVelocityY(startVelocityY);
 		setBall(new JLabel());
 		getBall().setOpaque(true);
-		getBall().setBounds(getCurrentX(), getCurrentY(), 100, 20);
+		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
 		getBall().setBackground(Color.green);
 	}
 	
