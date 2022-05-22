@@ -1,13 +1,13 @@
 package main.java;
 
 
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import java.awt.CardLayout;
 import java.awt.Dimension;
-import java.awt.event.*;
 
 
 public class Runner{
@@ -15,107 +15,87 @@ public class Runner{
 	public static final String windowTitle = "Arkanoid";
 	public static final int boardWidth = 600;
 	public static final int boardHeight = 600;
+	public static final String homePanel = "home";
+	public static final String gamePanel = "game";
+	
 	
     JFrame frame;
-    Paddle paddle;
-    Ball ball;
     Home home;
+    Game game;
+    JPanel cards;
+    Runner(){
+        frame = new JFrame(windowTitle);
+        frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
+        frame.pack();
+        
+
+
+        
+        cards = new JPanel(new CardLayout());
+        home = new Home();
+        game = new Game();
+        
+        Runnable runnables[] = {startNewGame(), startNewGame(), startNewGame(), startNewGame(), startNewGame(), startNewGame()};
+        
+        for(int i = 0; i < Home.numButtons; i++) {
+        	home.getButtons()[i].registerEvent(runnables[i]);
+        }
+        
+    
+        
+        
+        cards.add(home.getPanel(), homePanel);
+        cards.add(game.getPanel(), gamePanel);
+        frame.add(cards);
+
+     
+        frame.setVisible(true);
+        
+         
+    }
+    
+    public Runnable showHome() {
+    	return new Runnable() {
+
+			@Override
+			public void run() {
+				((CardLayout)(cards.getLayout())).show(cards, homePanel);
+				
+				return;
+
+				
+			}
+    		
+    	};
+    }
+    
     
     private Runnable startNewGame() {
 		return new Runnable() {
 
 			@Override
 			public void run() {
-				return;
+				((CardLayout)(cards.getLayout())).show(cards, gamePanel);
+				Thread t = new Thread(game);
+				t.start();
+			
 				
 			}
 			
 		};
     }
     
+    
 
-    public void init(){
-        frame = new JFrame(windowTitle);
-        paddle = new Paddle();
-        ball = new Ball();
-        home = new Home();
-        frame.add(home.getPanel());
-        
-
-        //frame.setLayout(null);
-        frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
-        frame.pack();
-        
-        frame.setVisible(true);
-        
-        
-       /* 
-        
-        
-        frame.add(paddle.getBar());
-        frame.add(ball.getBall());
-        
-        
-
-
-        
-        frame.getContentPane().addMouseMotionListener(new MouseMotionListener() {
-
-            @Override
-            public void mouseDragged(MouseEvent e) {
-            }
-       
-            @Override
-            public void mouseMoved(MouseEvent e) {
-            	paddle.setCurrentX(e.getX());
-            	paddle.updateBar();
-            }
-       });
-       
-
-	*/
-
-        
-    }
 
     
     public static void main(String[] args){
-        Runner game = new Runner();
-        game.init();
+        Runner runner = new Runner();
+        runner.showHome().run();
+        
         //game.start();
     }
 
 
-
-	public void start() {
-
-			while (true) {
-				ball.setCurrentX((ball.getCurrentX() + ball.getCurrentVelocityX()));
-				ball.setCurrentY((ball.getCurrentY() + ball.getCurrentVelocityY()));
-				ball.updateBall();
-				
-				if (ball.getCurrentX() >= 600 - ball.getCurrentR()) {
-					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-				}
-				else if (ball.getCurrentY() <= 0 ) {
-					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-				}
-				else if(ball.getCurrentX() <= 0) {
-					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-				}
-				
-				else if (ball.getCurrentY() + ball.getCurrentR() >= paddle.getCurrentY() && (ball.getCurrentX() >= paddle.getCurrentX() && ball.getCurrentX() <= paddle.getCurrentX() + paddle.getCurrentWidth())) {
-					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-				}
-				
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				
-			}
-		
-	}
     
 }

@@ -12,6 +12,7 @@ public class HomeButton {
 	HomeButton() {
 		setLabel(new JLabel());
 		getLabel().setAlignmentX(JLabel.CENTER_ALIGNMENT);
+		getLabel().setVisible(true);
 
 	}
 
@@ -28,8 +29,6 @@ public class HomeButton {
     	getLabel().addMouseListener(new MouseListener() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-				System.out.println(getLabel().getText() + " clicked" );
 				r.run();
 				
 			}

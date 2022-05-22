@@ -23,12 +23,14 @@ public class Home {
 		getPanel().setLayout(new BoxLayout(getPanel(), BoxLayout.Y_AXIS));
 		getPanel().add(Box.createRigidArea(new Dimension(0,100)));
 		
+		
 		for (int i = 0; i < numButtons; i++) {
 			getButtons()[i] = new HomeButton();
 			getButtons()[i].getLabel().setText(texts[i]);
 			getPanel().add(getButtons()[i].getLabel());
 			getPanel().add(Box.createRigidArea(new Dimension(0,5)));
 		}
+		getPanel().setVisible(true);
 	}
 
 
