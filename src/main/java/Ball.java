@@ -35,6 +35,16 @@ public class Ball{
 		getBall().setBackground(Color.green);
 	}
 	
+	public void reset() {
+		setCurrentX(startX);
+		setCurrentY(startY);
+		setCurrentR(startR);
+		setCurrentVelocityX(startVelocityX);
+		setCurrentVelocityY(startVelocityY);
+		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		
+	}
+	
 
 	public int getCurrentX() {
 		return currentX;
