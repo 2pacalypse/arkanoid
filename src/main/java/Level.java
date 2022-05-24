@@ -23,8 +23,8 @@ public class Level {
 		int margin = 6;
 
 		for(int i = 0; i < 1; i++) {
-			for (int j = 0; j < 8; j++) {
-				Brick brick = new Brick(j*(Brick.defaultWidth +margin), i*(Brick.defaultHeight + margin), Brick.defaultWidth, Brick.defaultHeight,1, Color.red);
+			for (int j = 0; j < 6; j++) {
+				Brick brick = new Brick(50 + j*(Brick.defaultWidth +margin), 200 + i*(Brick.defaultHeight + margin), Brick.defaultWidth, Brick.defaultHeight,1, Color.red);
 				level.getPanel().add(brick.getLabel());
 				level.getBricks().add(brick);
 			}

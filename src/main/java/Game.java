@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
+import main.java.BallBrickIntersection.Side;
+
 public class Game implements Runnable {
 
 	enum State {
@@ -132,19 +134,43 @@ public class Game implements Runnable {
 			getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
 			getBall().updateBall();
 
-			for (Brick b: getCurrentLevel().getBricks()) {
-				System.out.println(b.getX() + " " + b.getY());
-				if ((ball.getCurrentY() <= (b.getY() + b.getHeight())) && ball.getCurrentX() >= b.getX() && ball.getCurrentX() <= b.getX() + b.getWidth()) {
-					b.getLabel().setBackground(Color.orange);
-					ball.setCurrentY(b.getY() + b.getHeight()  );
-					getBall().updateBall();
-					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+
+			for (Brick brick: getCurrentLevel().getBricks()) {
+					BallBrickIntersection result = new BallBrickIntersection(ball, brick);
+					if (result.getDist() != Float.POSITIVE_INFINITY) {
+						if (result.getSide() == Side.RIGHT) {
+							
+							ball.setCurrentX(result.getIntersectionX());
+							ball.setCurrentY(result.getIntersectionY());
+							getBall().updateBall();
+							ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
+							brick.getLabel().setBackground(Color.green);
+							
+							break;
+						}else if (result.getSide() == Side.DOWN) {
+							ball.setCurrentX(result.getIntersectionX());
+							ball.setCurrentY(result.getIntersectionY());
+							getBall().updateBall();
+							ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+							brick.getLabel().setBackground(Color.orange);
+							break;
+						}else if (result.getSide() == Side.UP) {
+							ball.setCurrentX(result.getIntersectionX());
+							ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
+							getBall().updateBall();
+							ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+							brick.getLabel().setBackground(Color.yellow); 
+							System.out.println(result.getIntersectionX() + " " + result.getIntersectionY());
+							break;
+						}
+						
+			
 					
-					b.getLabel().setBackground(Color.orange);
-					continue;
 				}
 			}
 			
+			
+
 		
 			
 			
