@@ -8,11 +8,11 @@ import javax.swing.JLabel;
 public class Ball{
 	
 	public static final int startX = 300;
-	public static final int startY = 250;
+	public static final int startY = 500;
 	public static final int startR = 25;
 	
-	public static final int startVelocityX = 2;
-	public static final int startVelocityY = 2;
+	public static final int startVelocityX = -2;
+	public static final int startVelocityY = -2;
 	
 	private int currentX;
 	private int currentY;

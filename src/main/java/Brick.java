@@ -2,14 +2,16 @@ package main.java;
 
 import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+
+import javax.swing.border.EtchedBorder;
 
 public class Brick {
 	
 	public static final int defaultWidth = 50;
 	public static final int defaultHeight = 20;
-	public static final int defaultnumHitsTobreak = 1;
-	public static final Color defaultColor = Color.orange;
+
 	
 	
 	private int x;
@@ -17,34 +19,24 @@ public class Brick {
 	private int width;
 	private int height;
 	private int numHitsTobreak;
-	private Color color;
 	private JLabel label;
 	
 	
-	Brick(int x, int y, int width, int height, int numHitsTobreak, Color color){
+	Brick(int x, int y){
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.numHitsTobreak = numHitsTobreak;
-		this.color = color;
+		this.width = defaultWidth;
+		this.height = defaultHeight;
 		this.label = new JLabel();
 		this.label.setLayout(null);
 		this.label.setBounds(x, y, width, height);
-		this.label.setBackground(color);
 		this.label.setOpaque(true);
 	}
 	
-	
-	class BallBrickIntersection{
 
+	public Brick hit() {
+		return null;
 	}
-	
-	
-	
-	
-	
-
 
 	public int getX() {
 		return x;
@@ -94,17 +86,6 @@ public class Brick {
 	public void setNumHitsTobreak(int numHitsTobreak) {
 		this.numHitsTobreak = numHitsTobreak;
 	}
-
-
-	public Color getColor() {
-		return color;
-	}
-
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
 
 
 

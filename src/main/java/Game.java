@@ -39,7 +39,7 @@ public class Game implements Runnable {
 	private Level currentLevel = Level.firstLevel();
 
 	Game() {
-
+		
 
 
 		getPanel().setLayout(null);
@@ -54,6 +54,10 @@ public class Game implements Runnable {
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
 		getPanel().add(getNumLivesLabel());
 		getNumLivesLabel().setBounds(Runner.boardWidth - 50, 0, 100, 20);
+		
+		
+		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
+		
 
 		getPanel().addMouseMotionListener(new MouseMotionListener() {
 
@@ -67,6 +71,8 @@ public class Game implements Runnable {
 				paddle.updateBar();
 			}
 		});
+		
+		
 
 		InputMap imap = getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
@@ -133,41 +139,74 @@ public class Game implements Runnable {
 			getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
 			getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
 			getBall().updateBall();
-
-
+			
+			Brick closest = null;
+			BallBrickIntersection closestIntersection = null;
+			double closestDist = Float.POSITIVE_INFINITY;
 			for (Brick brick: getCurrentLevel().getBricks()) {
-					BallBrickIntersection result = new BallBrickIntersection(ball, brick);
-					if (result.getDist() != Float.POSITIVE_INFINITY) {
-						if (result.getSide() == Side.RIGHT) {
-							
-							ball.setCurrentX(result.getIntersectionX());
-							ball.setCurrentY(result.getIntersectionY());
-							getBall().updateBall();
-							ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-							brick.getLabel().setBackground(Color.green);
-							
-							break;
-						}else if (result.getSide() == Side.DOWN) {
-							ball.setCurrentX(result.getIntersectionX());
-							ball.setCurrentY(result.getIntersectionY());
-							getBall().updateBall();
-							ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-							brick.getLabel().setBackground(Color.orange);
-							break;
-						}else if (result.getSide() == Side.UP) {
-							ball.setCurrentX(result.getIntersectionX());
-							ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
-							getBall().updateBall();
-							ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-							brick.getLabel().setBackground(Color.yellow); 
-							System.out.println(result.getIntersectionX() + " " + result.getIntersectionY());
-							break;
-						}
+				BallBrickIntersection result = new BallBrickIntersection(ball, brick);
+				if (result.getDist() < closestDist){
+					closest = brick;
+					closestDist = result.getDist();
+					closestIntersection = result;
+					}
+				}
+			if (closest != null) {
+				BallBrickIntersection result = closestIntersection;
+				if (result.getSide() == Side.RIGHT) {
+					
+					ball.setCurrentX(result.getIntersectionX());
+					ball.setCurrentY(result.getIntersectionY());
+					getBall().updateBall();
+					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
+					//closest.getLabel().setBackground(Color.green);
+					
+				}else if (result.getSide() == Side.DOWN) {
+					ball.setCurrentX(result.getIntersectionX());
+					ball.setCurrentY(result.getIntersectionY());
+					getBall().updateBall();
+					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+					//closest.getLabel().setBackground(Color.orange);
+
+				}else if (result.getSide() == Side.UP) {
+					ball.setCurrentX(result.getIntersectionX());
+					ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
+					getBall().updateBall();
+					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+					//closest.getLabel().setBackground(Color.yellow); 
+
+				}else if (result.getSide() ==Side.LEFT) {
+					ball.setCurrentX(result.getIntersectionX() - ball.getCurrentR());
+					ball.setCurrentY(result.getIntersectionY());
+					getBall().updateBall();
+					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
+					//closest.getLabel().setBackground(Color.black); 
+				}
+				
+				Brick newBrick = closest.hit();
+				System.out.println(newBrick);
+				getCurrentLevel().getBricks().remove(closest);
+				getCurrentLevel().getPanel().remove(closest.getLabel());
+				if (newBrick != null) {
+					getCurrentLevel().getBricks().add(newBrick);
+					getCurrentLevel().getPanel().add(newBrick.getLabel());
+				}
+
+				getPanel().repaint();
+				
+			}
+			
+
+
+
+			
+
+						
 						
 			
 					
-				}
-			}
+				
+			
 			
 			
 
