@@ -136,9 +136,7 @@ public class Game implements Runnable {
 			}
 			
 			
-			getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
-			getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
-			getBall().updateBall();
+			
 			
 			Brick closest = null;
 			BallBrickIntersection closestIntersection = null;
@@ -192,7 +190,7 @@ public class Game implements Runnable {
 					getCurrentLevel().getPanel().add(newBrick.getLabel());
 				}
 
-				getPanel().repaint();
+				
 				
 			}
 			
@@ -240,6 +238,11 @@ public class Game implements Runnable {
 				getNumLivesLabel().setText(numLivesLabelText + numLives);
 
 			}
+			
+			getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
+			getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
+			getBall().updateBall();
+			getPanel().repaint();
 
 			try {
 				Thread.sleep(10);

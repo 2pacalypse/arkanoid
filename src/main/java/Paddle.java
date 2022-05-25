@@ -2,7 +2,8 @@ package main.java;
 
 import java.awt.Color;
 
-import javax.swing.BorderFactory;
+
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 
@@ -10,8 +11,8 @@ public class Paddle {
 	
 	public static final int startX = 300;
 	public static final int startY = 550;
-	public static final int startWidth = 100;
-	public static final int startHeight = 20;
+	public static final int startWidth = 128;
+	public static final int startHeight = 24;
 	public static final Color startBarColor = Color.GRAY;
 	public static final Color startBorderColor = Color.BLACK;
 	public static final int startBorderThickness = 4;
@@ -43,10 +44,9 @@ public class Paddle {
 		
 
 		setBar(new JLabel());
-		getBar().setOpaque(true);
 		getBar().setBounds(getCurrentX(), getCurrentY(), getCurrentWidth(), getCurrentHeight());
-		getBar().setBackground(getCurrentBarColor());
-		getBar().setBorder(BorderFactory.createLineBorder(currentBorderColor, currentBorderThickness, false));
+		getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+
 	}
 
 

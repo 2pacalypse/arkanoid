@@ -1,15 +1,12 @@
 package main.java;
-
-import java.awt.Color;
-
-
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 public class Ball{
 	
 	public static final int startX = 300;
 	public static final int startY = 500;
-	public static final int startR = 25;
+	public static final int startR = 24;
 	
 	public static final int startVelocityX = -2;
 	public static final int startVelocityY = -2;
@@ -30,9 +27,8 @@ public class Ball{
 		setCurrentVelocityX(startVelocityX);
 		setCurrentVelocityY(startVelocityY);
 		setBall(new JLabel());
-		getBall().setOpaque(true);
-		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
-		getBall().setBackground(Color.green);
+		//getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		getBall().setIcon(new ImageIcon(getClass().getResource("../resources/redBall.png")));
 	}
 	
 	public void reset() {
