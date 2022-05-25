@@ -27,7 +27,7 @@ public class Ball{
 		setCurrentVelocityX(startVelocityX);
 		setCurrentVelocityY(startVelocityY);
 		setBall(new JLabel());
-		//getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
 		getBall().setIcon(new ImageIcon(getClass().getResource("../resources/redBall.png")));
 	}
 	

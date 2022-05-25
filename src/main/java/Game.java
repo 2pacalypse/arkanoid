@@ -135,7 +135,7 @@ public class Game implements Runnable {
 				}
 			}
 			
-			
+			BallPaddleIntersection ballpaddle = new BallPaddleIntersection(ball, paddle);
 			
 			
 			Brick closest = null;
@@ -149,6 +149,8 @@ public class Game implements Runnable {
 					closestIntersection = result;
 					}
 				}
+			
+			
 			if (closest != null) {
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
@@ -192,26 +194,19 @@ public class Game implements Runnable {
 
 				
 				
+			}	else if (ballpaddle.getDist() != Float.POSITIVE_INFINITY) {
+				ball.setCurrentX(ballpaddle.getIntersectionX() - ball.getCurrentR() / 2);
+				ball.setCurrentY(ballpaddle.getIntersectionY() - ball.getCurrentR());
+				ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+				getBall().updateBall();
+			}else {
+				getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
+				getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
+				getBall().updateBall();
 			}
-			
-
-
-
-			
-
-						
-						
-			
-					
 				
 			
-			
-			
-
-		
-			
-			
-		
+						
 
 			
 			
@@ -225,11 +220,7 @@ public class Game implements Runnable {
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 			}
 
-			if (getBall().getCurrentY() + getBall().getCurrentR() >= getPaddle().getCurrentY()
-					&& (getBall().getCurrentX() + getBall().getCurrentR() >= getPaddle().getCurrentX()
-							&& getBall().getCurrentX() <= getPaddle().getCurrentX() + getPaddle().getCurrentWidth())) {
-				getBall().setCurrentVelocityY(-getBall().getCurrentVelocityY());
-			}
+
 
 			if (getBall().getCurrentY() >= 600) {
 				setNumLives(getNumLives() - 1);
@@ -239,13 +230,12 @@ public class Game implements Runnable {
 
 			}
 			
-			getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
-			getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
-			getBall().updateBall();
+			
+			//
 			getPanel().repaint();
 
 			try {
-				Thread.sleep(10);
+				Thread.sleep(5);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

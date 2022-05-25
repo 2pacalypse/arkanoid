@@ -35,6 +35,8 @@ public class BallBrickIntersection {
 		}	
 	}
 	
+	
+	//fix here. take R into account in the second set of comparisons
 	private void right(Ball ball, Brick brick) {
 		float m =  ball.getCurrentVelocityY() / (float) ball.getCurrentVelocityX();
 		int y = (int) (m * (brick.getX() + brick.getWidth() - ball.getCurrentX()) + ball.getCurrentY() );
