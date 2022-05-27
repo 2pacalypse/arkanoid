@@ -1,6 +1,6 @@
 package main.java;
 
-import java.awt.Color;
+
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -15,6 +15,7 @@ public class Level {
 		panel.setLayout(null);
 		panel.setBounds(0, 0, 600, 600);
 		setBricks(new ArrayList<Brick>());
+		panel.setOpaque(false);
 		
 	}
 	

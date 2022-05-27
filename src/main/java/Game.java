@@ -5,12 +5,12 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.AbstractAction;
 
 import javax.swing.ActionMap;
+import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -35,6 +35,7 @@ public class Game {
 	};
 
 	private JFrame frame;
+	private JLabel bg = new JLabel();
 	private JPanel panel = new JPanel();
 
 	private Paddle paddle = new Paddle();
@@ -61,9 +62,20 @@ public class Game {
 		getPanel().add(getPaddle().getBar());
 		getPanel().add(getBall().getBall());
 		getPanel().add(getCurrentLevel().getPanel());
+		
+		bg.setBounds(0, 0, boardWidth, boardHeight);
+		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		
+		getPanel().add(bg);
+		getPanel().setComponentZOrder(bg, 3);
+		
+
+
+		
+		
 
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
-		getNumLivesLabel().setBounds(Runner.boardWidth - 50, 0, 100, 20);
+		getNumLivesLabel().setBounds(boardWidth - 50, 0, 100, 20);
 		getPanel().add(getNumLivesLabel());
 		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
 
@@ -97,14 +109,14 @@ public class Game {
 			}
 		});
 
-		home.getButtons()[1].getLabel().addMouseListener(new MouseAdapter() {
+		home.getButtons()[1].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				System.out.println("asdasd");
 				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 			}
 		});
 
-		home.getButtons()[0].getLabel().addMouseListener(new MouseAdapter() {
+		home.getButtons()[0].addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
