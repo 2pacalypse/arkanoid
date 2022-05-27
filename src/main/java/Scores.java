@@ -1,5 +1,6 @@
 package main.java;
 
+import java.awt.Color;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -7,16 +8,14 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -24,7 +23,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 public class Scores {
-	public static final Vector<String> columnNames = new Vector<String>(Arrays.asList(new String[]{"Player", "Time","Date", "Score"}));
+	public static final Vector<String> columnNames = new Vector<String>(Arrays.asList(new String[]{"Player", "Date","Time", "Score"}));
 	
 	private JPanel panel;
 	private JTable table;
@@ -32,18 +31,35 @@ public class Scores {
 
 	Scores(){
 		
+		JLabel bg = new JLabel();
+		bg.setBounds(0, 0, Game.boardWidth, Game.boardHeight);
+		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		
+
+		
 		
 		panel = new JPanel();
+
+		
+
+		
+		
+		panel.setLayout(null);
 		table = new JTable();
 		jsp = new JScrollPane(table);
+		SwingUtilities.updateComponentTreeUI(jsp);
+		
 		jsp.setBorder(BorderFactory.createEmptyBorder());
+		jsp.setBounds(100, 50, 400, 400);
 		panel.add(jsp);
 		
-		
 
 
 		
-		
+		table.getTableHeader().setResizingAllowed(false);
+		table.setRowHeight(20);
+
+
 		
 		DefaultTableModel tableModel = new DefaultTableModel() {
 
@@ -62,7 +78,6 @@ public class Scores {
 			load();
 		}else {
 			tableModel.setColumnIdentifiers(columnNames);
-			addScore("murat", 100);
 			save();
 		}
 		
@@ -75,7 +90,22 @@ public class Scores {
 		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
 		table.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
 		table.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
-
+		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
+		table.getTableHeader().setForeground(Color.black);
+		table.setAutoCreateRowSorter(true);
+		table.getRowSorter().toggleSortOrder(3);
+		table.getRowSorter().toggleSortOrder(3);
+		table.getTableHeader().setEnabled(false);
+		table.setRowSelectionAllowed(false);
+		
+		
+		
+		
+		getPanel().add(bg);
+		getPanel().setComponentZOrder(bg, 1);
+		jsp.setOpaque(false);
+		jsp.getViewport().setOpaque(false);
+		
 		
 		
 	}
@@ -109,7 +139,6 @@ public class Scores {
 			// TODO Auto-generated catch block
 			ex.printStackTrace();
 		}
-		System.out.println("Loaded");
 	}
 	
 	private void save() {
@@ -122,7 +151,6 @@ public class Scores {
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(obj);
             objectOut.close();
-            System.out.println("The Object  was succesfully written to a file");
  
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -137,8 +165,18 @@ public class Scores {
 		
 		String date = dateFormatter.format(dt);
 		String time = timeFormatter.format(dt);
+		
+		if (table.getModel().getRowCount() == 10) {
+			int min_score = (int) table.getModel().getValueAt(9, 3);
+			if ((int) score >= min_score) {
+				((DefaultTableModel) (table.getModel())).removeRow(9);
+			}
+		}
+		
+		
         
-        ((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
+		((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
+        save();
 		
 	}
 	

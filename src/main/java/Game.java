@@ -1,6 +1,7 @@
 package main.java;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -42,7 +43,10 @@ public class Game {
 	private Ball ball = new Ball();
 	private Home home = new Home();
 	private Scores scores = new Scores();
-	private Level currentLevel = Level.firstLevel();
+	private Level currentLevel = Level.dummyLevel();
+	private int currentLevelIdx = 0;
+	private Runnable[] levels = new Runnable[2];
+	
 
 	private int numLives = startingNumLives;
 	private JLabel numLivesLabel = new JLabel();
@@ -51,8 +55,32 @@ public class Game {
 	private Object lock = new Object();
 
 	JPanel cards = new JPanel(new CardLayout());
+	
 
 	Game() {
+		levels[0] = new Runnable() {
+			@Override
+			public void run() {
+				Level.dummyLevel();
+				
+			}
+			
+		};
+		
+		levels[1] = new Runnable() {
+
+			@Override
+			public void run() {
+				Level.firstLevel();
+				
+			}
+			
+		};
+		
+		
+		
+	
+		
 
 		frame = new JFrame(windowTitle);
 		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -69,6 +97,7 @@ public class Game {
 		getPanel().add(bg);
 		getPanel().setComponentZOrder(bg, 3);
 		
+		
 
 
 		
@@ -76,6 +105,7 @@ public class Game {
 
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
 		getNumLivesLabel().setBounds(boardWidth - 50, 0, 100, 20);
+		getNumLivesLabel().setForeground(Color.white);
 		getPanel().add(getNumLivesLabel());
 		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
 
@@ -101,17 +131,31 @@ public class Game {
 			public void actionPerformed(ActionEvent e) {
 
 				synchronized (lock) {
-					System.out.println("space pressed");
 					setState(State.PLAY);
 					lock.notify();
 
 				}
 			}
 		});
+		
+		
+		InputMap imap2 = cards.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		imap2.put(KeyStroke.getKeyStroke("BACK_SPACE"), "backSpaceAction");
+		ActionMap amap2 = cards.getActionMap();
+		amap2.put("backSpaceAction", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
 
-		home.getButtons()[1].addMouseListener(new MouseAdapter() {
+			public void actionPerformed(ActionEvent e) {
+				((CardLayout) (cards.getLayout())).show(cards, "home");
+				
+			}
+		});
+		
+		
+		
+
+		home.getButtons()[2].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("asdasd");
 				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 			}
 		});
@@ -121,7 +165,6 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				System.out.println("hahasdaa");
 				((CardLayout) (cards.getLayout())).show(cards, "panel");
 				Thread t = new Thread(new Runnable() {
 
@@ -145,7 +188,7 @@ public class Game {
 		((CardLayout) (cards.getLayout())).show(cards, "home");
 
 		frame.add(cards);
-		frame.setVisible(true);
+		frame.setVisible(true);	
 
 	}
 
@@ -185,6 +228,26 @@ public class Game {
 						e.printStackTrace();
 					}
 				}
+			}
+			
+			if (getCurrentLevel().getBricks().size() == 0) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				state = State.START;
+				panel.remove(currentLevel.getPanel());
+				currentLevelIdx++;
+				currentLevel = levels[currentLevelIdx].run();
+				panel.add(currentLevel.getPanel(), 2);
+				getBall().reset();
+				panel.repaint();
+				
+
+				continue;
 			}
 
 			BallPaddleIntersection ballpaddle = new BallPaddleIntersection(ball, paddle);
@@ -234,7 +297,6 @@ public class Game {
 				}
 
 				Brick newBrick = closest.hit();
-				System.out.println(newBrick);
 				getCurrentLevel().getBricks().remove(closest);
 				getCurrentLevel().getPanel().remove(closest.getLabel());
 				if (newBrick != null) {
@@ -291,19 +353,18 @@ public class Game {
 
 		}
 
-		System.out.println("game over");
+
 		String name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
 				JOptionPane.INFORMATION_MESSAGE);
 		while (name == null || name.isEmpty()) {
 			JOptionPane.showMessageDialog(getPanel(), "Please enter a user name", "Error", JOptionPane.ERROR_MESSAGE);
-			;
 			name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
+		scores.addScore(name, 300);
 		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
-		// panel.repaint();
+		
 
-		// System.out.println(input);
 
 	}
 

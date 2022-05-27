@@ -19,6 +19,24 @@ public class Level {
 		
 	}
 	
+	public static Level dummyLevel() {
+		Level level = new Level();
+		int margin = 6;
+
+		for(int i = 0; i < 1 ; i++) {
+			for (int j = 0; j < 1; j++) {
+				Brick brick = new BrickEasy(20 + j*(Brick.defaultWidth +margin), 200 + i*(Brick.defaultHeight + margin));
+				level.getPanel().add(brick.getLabel());
+				level.getBricks().add(brick);
+			}
+		}
+		
+
+		
+		level.getPanel().setVisible(true);
+		return level;
+	}
+	
 	public static Level firstLevel() {
 		Level level = new Level();
 		int margin = 6;
