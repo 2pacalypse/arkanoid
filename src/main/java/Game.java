@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 import javax.swing.AbstractAction;
 
@@ -30,6 +32,8 @@ public class Game {
 	public static final String gamePanel = "game";
 	public static final int startingNumLives = 3;
 	public static final String numLivesLabelText = "Lives: ";
+	public static final String scoreLabelText = "Score: ";
+	public static final String levelLabelText = "Level: ";
 
 	enum State {
 		START, PLAY, OVER
@@ -44,8 +48,11 @@ public class Game {
 	private Home home = new Home();
 	private Scores scores = new Scores();
 	private Level currentLevel = Level.dummyLevel();
+	
 	private int currentLevelIdx = 0;
-	private Runnable[] levels = new Runnable[2];
+	private JLabel currentLevelLabel = new JLabel();
+	
+	private ArrayList<Callable<Level>> levels = new ArrayList<Callable<Level>>();
 	
 
 	private int numLives = startingNumLives;
@@ -56,27 +63,32 @@ public class Game {
 
 	JPanel cards = new JPanel(new CardLayout());
 	
+	private int currentScore;
+	private JLabel currentScoreLabel = new JLabel();
+	
 
 	Game() {
-		levels[0] = new Runnable() {
-			@Override
-			public void run() {
-				Level.dummyLevel();
-				
-			}
-			
-		};
-		
-		levels[1] = new Runnable() {
+		levels.add(new Callable<Level>() {
 
 			@Override
-			public void run() {
-				Level.firstLevel();
-				
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub
+				return Level.dummyLevel();
 			}
 			
-		};
+			
+		});
 		
+		levels.add(new Callable<Level>() {
+
+			@Override
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub
+				return Level.dummyLevel();
+			}
+			
+			
+		});
 		
 		
 	
@@ -108,7 +120,24 @@ public class Game {
 		getNumLivesLabel().setForeground(Color.white);
 		getPanel().add(getNumLivesLabel());
 		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
+		
+		
+		currentScoreLabel.setText(scoreLabelText + currentScore);
+		currentScoreLabel.setBounds(0, 0, 100, 20);
+		currentScoreLabel.setForeground(Color.white);
+		getPanel().add(currentScoreLabel);
+		getPanel().setComponentZOrder(currentScoreLabel, 0);
+		
+		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+		currentLevelLabel.setBounds(275, 0, 100, 20);
+		currentLevelLabel.setForeground(Color.white);
+		getPanel().add(currentLevelLabel);
+		getPanel().setComponentZOrder(currentLevelLabel, 0);
 
+		
+		
+		
+		
 		getPanel().addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
@@ -231,17 +260,19 @@ public class Game {
 			}
 			
 			if (getCurrentLevel().getBricks().size() == 0) {
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				JOptionPane.showMessageDialog(getPanel(), "You have passed the level.", "Success!", JOptionPane.INFORMATION_MESSAGE);
 				
 				state = State.START;
 				panel.remove(currentLevel.getPanel());
 				currentLevelIdx++;
-				currentLevel = levels[currentLevelIdx].run();
+				
+				try {
+					currentLevel = levels.get(currentLevelIdx).call();
+					currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+				} catch (Exception e) {
+					JOptionPane.showMessageDialog(getPanel(), "You have cleared all the levels.", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					break;
+				}
 				panel.add(currentLevel.getPanel(), 2);
 				getBall().reset();
 				panel.repaint();
@@ -265,6 +296,9 @@ public class Game {
 			}
 
 			if (closest != null) {
+				currentScore += 10;
+				currentScoreLabel.setText(scoreLabelText + currentScore);
+				
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
 
@@ -361,8 +395,26 @@ public class Game {
 			name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
-		scores.addScore(name, 300);
+		scores.addScore(name, currentScore);
 		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
+		setNumLives(startingNumLives);
+		getBall().reset();
+		setState(State.START);
+		getNumLivesLabel().setText(numLivesLabelText + numLives);
+		currentScore = 0;
+		currentScoreLabel.setText(scoreLabelText + currentScore);
+		
+		state = State.START;
+		panel.remove(currentLevel.getPanel());
+		currentLevelIdx = 0;
+		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+		try {
+			currentLevel = levels.get(currentLevelIdx).call();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		panel.add(currentLevel.getPanel(), 2);
+		panel.repaint();
 		
 
 
