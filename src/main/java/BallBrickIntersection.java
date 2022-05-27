@@ -5,8 +5,8 @@ package main.java;
 public class BallBrickIntersection {
 	enum Side {UP, DOWN, LEFT, RIGHT};
 	private Side side;
-	private int intersectionX;
-	private int intersectionY;
+	private double intersectionX;
+	private double intersectionY;
 	private double dist = Float.POSITIVE_INFINITY;
 	
 	BallBrickIntersection(Ball ball, Brick brick){
@@ -20,8 +20,8 @@ public class BallBrickIntersection {
 	}
 	
 	private void down(Ball ball, Brick brick) {
-		float m =  ball.getCurrentVelocityY() / (float) ball.getCurrentVelocityX();
-		int x = (int) (((brick.getY() + brick.getHeight() - ball.getCurrentY())) /m + ball.getCurrentX());
+		double m =  ball.getCurrentVelocityY() / ball.getCurrentVelocityX();
+		double x =  (((brick.getY() + brick.getHeight() - ball.getCurrentY())) /m + ball.getCurrentX());
 		
 		//down
 		if (ball.getCurrentY() >= brick.getY() + brick.getHeight() && ball.getCurrentY() + ball.getCurrentVelocityY() <= brick.getY() + brick.getHeight() && brick.getX() - ball.getCurrentR() <= x && x<= brick.getX() + brick.getWidth()) {
@@ -38,10 +38,10 @@ public class BallBrickIntersection {
 	
 	//fix here. take R into account in the second set of comparisons
 	private void right(Ball ball, Brick brick) {
-		float m =  ball.getCurrentVelocityY() / (float) ball.getCurrentVelocityX();
-		int y = (int) (m * (brick.getX() + brick.getWidth() - ball.getCurrentX()) + ball.getCurrentY() );
+		double m =  ball.getCurrentVelocityY() /  ball.getCurrentVelocityX();
+		double y =  (m * (brick.getX() + brick.getWidth() - ball.getCurrentX()) + ball.getCurrentY() );
 		
-		if (ball.getCurrentX() >= brick.getX() + brick.getWidth() && ball.getCurrentX() + ball.getCurrentVelocityX() <= brick.getX() + brick.getWidth() && y >= brick.getY() && y <= brick.getY() + brick.getHeight()) {
+		if (ball.getCurrentX() >= brick.getX() + brick.getWidth() && ball.getCurrentX() + ball.getCurrentVelocityX() <= brick.getX() + brick.getWidth() && y + ball.getCurrentR() >= brick.getY() && y <= brick.getY() + brick.getHeight()) {
 			double currentDist = Math.pow(ball.getCurrentY() - y, 2) + Math.pow(ball.getCurrentX()  - brick.getX() - brick.getWidth(), 2) ;
 			if (currentDist <= dist) {
 				dist = currentDist;
@@ -54,8 +54,8 @@ public class BallBrickIntersection {
 	
 	private void left(Ball ball, Brick brick) {
 		
-		float m =  ball.getCurrentVelocityY() / (float) ball.getCurrentVelocityX();
-		int y = (int) (m * (brick.getX() - ball.getCurrentX() - ball.getCurrentR() ) + ball.getCurrentY() );
+		double m =  ball.getCurrentVelocityY() /  ball.getCurrentVelocityX();
+		double y =  (m * (brick.getX() - ball.getCurrentX() - ball.getCurrentR() ) + ball.getCurrentY() );
 		
 		if (ball.getCurrentX()	+ ball.getCurrentR() <= brick.getX() && ball.getCurrentX() + ball.getCurrentR() + ball.getCurrentVelocityX() >= brick.getX()  && y >= brick.getY() - ball.getCurrentR() && y <= brick.getY() + brick.getHeight()) {
 			double currentDist = Math.pow(ball.getCurrentY() - y, 2) + Math.pow(ball.getCurrentX()  - brick.getX(), 2) ;
@@ -70,8 +70,8 @@ public class BallBrickIntersection {
 	}
 	
 	private void up(Ball ball, Brick brick) {
-		float m =  ball.getCurrentVelocityY() / (float) ball.getCurrentVelocityX();
-		int x = (int) (((brick.getY() - ball.getCurrentY() - ball.getCurrentR())) /m + ball.getCurrentX());
+		double m =  ball.getCurrentVelocityY() / ball.getCurrentVelocityX();
+		double x =  (((brick.getY() - ball.getCurrentY() - ball.getCurrentR())) /m + ball.getCurrentX());
 		
 		//down
 		if (ball.getCurrentY() + ball.getCurrentR() <= brick.getY()  && ball.getCurrentY() + ball.getCurrentR() + ball.getCurrentVelocityY() >= brick.getY() && brick.getX() <= x + ball.getCurrentR() && x<= brick.getX() + brick.getWidth()) {
@@ -85,19 +85,19 @@ public class BallBrickIntersection {
 		}
 	}
 
-	public int getIntersectionX() {
+	public double getIntersectionX() {
 		return intersectionX;
 	}
 
-	public void setIntersectionX(int intersectionX) {
+	public void setIntersectionX(double intersectionX) {
 		this.intersectionX = intersectionX;
 	}
 
-	public int getIntersectionY() {
+	public double getIntersectionY() {
 		return intersectionY;
 	}
 
-	public void setIntersectionY(int intersectionY) {
+	public void setIntersectionY(double intersectionY) {
 		this.intersectionY = intersectionY;
 	}
 

@@ -1,9 +1,11 @@
 package main.java;
 
-import java.awt.Color;
-import java.awt.Component;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.AbstractAction;
@@ -11,24 +13,35 @@ import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import main.java.BallBrickIntersection.Side;
 
-public class Game implements Runnable {
+public class Game {
+	public static final String windowTitle = "Arkanoid";
+	public static final int boardWidth = 600;
+	public static final int boardHeight = 600;
+	public static final String homePanel = "home";
+	public static final String gamePanel = "game";
+	public static final int startingNumLives = 3;
+	public static final String numLivesLabelText = "Lives: ";
 
 	enum State {
 		START, PLAY, OVER
 	};
 
-	public static final int startingNumLives = 3;
-	public static final String numLivesLabelText = "Lives: ";
+	private JFrame frame;
+	private JPanel panel = new JPanel();
 
 	private Paddle paddle = new Paddle();
 	private Ball ball = new Ball();
-	private JPanel panel = new JPanel();
+	private Home home = new Home();
+	private Scores scores = new Scores();
+	private Level currentLevel = Level.firstLevel();
 
 	private int numLives = startingNumLives;
 	private JLabel numLivesLabel = new JLabel();
@@ -36,28 +49,23 @@ public class Game implements Runnable {
 	private State state = State.START;
 	private Object lock = new Object();
 
-	private Level currentLevel = Level.firstLevel();
+	JPanel cards = new JPanel(new CardLayout());
 
 	Game() {
-		
 
+		frame = new JFrame(windowTitle);
+		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
+		frame.pack();
 
 		getPanel().setLayout(null);
 		getPanel().add(getPaddle().getBar());
 		getPanel().add(getBall().getBall());
-
-		
 		getPanel().add(getCurrentLevel().getPanel());
-		getPanel().setVisible(true);
-		
 
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
-		getPanel().add(getNumLivesLabel());
 		getNumLivesLabel().setBounds(Runner.boardWidth - 50, 0, 100, 20);
-		
-		
+		getPanel().add(getNumLivesLabel());
 		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
-		
 
 		getPanel().addMouseMotionListener(new MouseMotionListener() {
 
@@ -71,8 +79,6 @@ public class Game implements Runnable {
 				paddle.updateBar();
 			}
 		});
-		
-		
 
 		InputMap imap = getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
@@ -83,6 +89,7 @@ public class Game implements Runnable {
 			public void actionPerformed(ActionEvent e) {
 
 				synchronized (lock) {
+					System.out.println("space pressed");
 					setState(State.PLAY);
 					lock.notify();
 
@@ -90,9 +97,43 @@ public class Game implements Runnable {
 			}
 		});
 
-	}
+		home.getButtons()[1].getLabel().addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("asdasd");
+				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
+			}
+		});
 
-	public void start() {
+		home.getButtons()[0].getLabel().addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("hahasdaa");
+				((CardLayout) (cards.getLayout())).show(cards, "panel");
+				Thread t = new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+
+						play();
+
+					}
+
+				});
+				t.start();
+			}
+
+		});
+
+		cards.add(panel, "panel");
+		cards.add(home.getPanel(), "home");
+		cards.add(scores.getPanel(), "scoretable");
+		((CardLayout) (cards.getLayout())).show(cards, "home");
+
+		frame.add(cards);
+		frame.setVisible(true);
 
 	}
 
@@ -120,8 +161,7 @@ public class Game implements Runnable {
 		this.panel = panel;
 	}
 
-	@Override
-	public void run() {
+	public void play() {
 
 		while (numLives > 0) {
 			synchronized (lock) {
@@ -134,55 +174,53 @@ public class Game implements Runnable {
 					}
 				}
 			}
-			
+
 			BallPaddleIntersection ballpaddle = new BallPaddleIntersection(ball, paddle);
-			
-			
+
 			Brick closest = null;
 			BallBrickIntersection closestIntersection = null;
 			double closestDist = Float.POSITIVE_INFINITY;
-			for (Brick brick: getCurrentLevel().getBricks()) {
+			for (Brick brick : getCurrentLevel().getBricks()) {
 				BallBrickIntersection result = new BallBrickIntersection(ball, brick);
-				if (result.getDist() < closestDist){
+				if (result.getDist() < closestDist) {
 					closest = brick;
 					closestDist = result.getDist();
 					closestIntersection = result;
-					}
 				}
-			
-			
+			}
+
 			if (closest != null) {
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
-					
+
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-					//closest.getLabel().setBackground(Color.green);
-					
-				}else if (result.getSide() == Side.DOWN) {
+					// closest.getLabel().setBackground(Color.green);
+
+				} else if (result.getSide() == Side.DOWN) {
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-					//closest.getLabel().setBackground(Color.orange);
+					// closest.getLabel().setBackground(Color.orange);
 
-				}else if (result.getSide() == Side.UP) {
+				} else if (result.getSide() == Side.UP) {
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
 					getBall().updateBall();
 					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-					//closest.getLabel().setBackground(Color.yellow); 
+					// closest.getLabel().setBackground(Color.yellow);
 
-				}else if (result.getSide() ==Side.LEFT) {
+				} else if (result.getSide() == Side.LEFT) {
 					ball.setCurrentX(result.getIntersectionX() - ball.getCurrentR());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-					//closest.getLabel().setBackground(Color.black); 
+					// closest.getLabel().setBackground(Color.black);
 				}
-				
+
 				Brick newBrick = closest.hit();
 				System.out.println(newBrick);
 				getCurrentLevel().getBricks().remove(closest);
@@ -192,24 +230,27 @@ public class Game implements Runnable {
 					getCurrentLevel().getPanel().add(newBrick.getLabel());
 				}
 
-				
-				
-			}	else if (ballpaddle.getDist() != Float.POSITIVE_INFINITY) {
+			} else if (ballpaddle.getDist() != Float.POSITIVE_INFINITY) {
+				double alpha = (ballpaddle.getIntersectionX() - paddle.getCurrentX())
+						/ (double) paddle.getCurrentWidth();
+				double theta = -70 * (1 - alpha) + 70 * alpha;
+				double magnitude = Math
+						.sqrt(Math.pow(ball.getCurrentVelocityX(), 2) + Math.pow(ball.getCurrentVelocityY(), 2));
+
+				double vx = (magnitude * Math.sin(Math.toRadians(theta)));
+				double vy = -(magnitude * Math.cos(Math.toRadians(theta)));
+
 				ball.setCurrentX(ballpaddle.getIntersectionX() - ball.getCurrentR() / 2);
 				ball.setCurrentY(ballpaddle.getIntersectionY() - ball.getCurrentR());
-				ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
+				ball.setCurrentVelocityY(vy);
+				ball.setCurrentVelocityX(vx);
 				getBall().updateBall();
-			}else {
+			} else {
 				getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
 				getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
 				getBall().updateBall();
 			}
-				
-			
-						
 
-			
-			
 			if (getBall().getCurrentX() >= 600 - getBall().getCurrentR()) {
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 			}
@@ -220,8 +261,6 @@ public class Game implements Runnable {
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 			}
 
-
-
 			if (getBall().getCurrentY() >= 600) {
 				setNumLives(getNumLives() - 1);
 				getBall().reset();
@@ -229,9 +268,7 @@ public class Game implements Runnable {
 				getNumLivesLabel().setText(numLivesLabelText + numLives);
 
 			}
-			
-			
-			//
+
 			getPanel().repaint();
 
 			try {
@@ -241,7 +278,20 @@ public class Game implements Runnable {
 			}
 
 		}
+
 		System.out.println("game over");
+		String name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
+				JOptionPane.INFORMATION_MESSAGE);
+		while (name == null || name.isEmpty()) {
+			JOptionPane.showMessageDialog(getPanel(), "Please enter a user name", "Error", JOptionPane.ERROR_MESSAGE);
+			;
+			name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
+		// panel.repaint();
+
+		// System.out.println(input);
 
 	}
 

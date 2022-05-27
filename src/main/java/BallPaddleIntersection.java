@@ -1,17 +1,17 @@
 package main.java;
 
 public class BallPaddleIntersection {
-	private int intersectionX;
-	private int intersectionY;
+	private double intersectionX;
+	private double intersectionY;
 	private double dist = Float.POSITIVE_INFINITY;
 	
 	BallPaddleIntersection(Ball ball, Paddle paddle){
-		int ballRadius = ball.getCurrentR() / 2;
-		int ballCenterX = ball.getCurrentX() + ballRadius;
-		int ballCenterY = ball.getCurrentY() + ballRadius;
+		double ballRadius = ball.getCurrentR() / 2;
+		double ballCenterX = ball.getCurrentX() + ballRadius;
+		double ballCenterY = ball.getCurrentY() + ballRadius;
 		
 		double k = (paddle.getCurrentY() - ballRadius - ballCenterY) /(double) ball.getCurrentVelocityY();
-		int x = (int) (ballCenterX + k*ball.getCurrentVelocityX());
+		double x = (int) (ballCenterX + k*ball.getCurrentVelocityX());
 		
 		if (ballCenterY + ballRadius <= paddle.getCurrentY() && 
 			ballCenterY + ballRadius + ball.getCurrentVelocityY() >= paddle.getCurrentY() &&
@@ -24,19 +24,19 @@ public class BallPaddleIntersection {
 		
 	}
 
-	public int getIntersectionX() {
+	public double getIntersectionX() {
 		return intersectionX;
 	}
 
-	public void setIntersectionX(int intersectionX) {
+	public void setIntersectionX(double intersectionX) {
 		this.intersectionX = intersectionX;
 	}
 
-	public int getIntersectionY() {
+	public double getIntersectionY() {
 		return intersectionY;
 	}
 
-	public void setIntersectionY(int intersectionY) {
+	public void setIntersectionY(double intersectionY) {
 		this.intersectionY = intersectionY;
 	}
 

@@ -76,10 +76,16 @@ public class Runner{
 			@Override
 			public void run() {
 				((CardLayout)(cards.getLayout())).show(cards, gamePanel);
-				Thread t = new Thread(game);
-				t.start();
-			
-				
+				//Thread t = new Thread(game);
+				//t.start();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("haha");
+				//showHome();
 			}
 			
 		};
@@ -90,8 +96,8 @@ public class Runner{
 
     
     public static void main(String[] args){
-        Runner runner = new Runner();
-        runner.showHome().run();
+       Game g = new Game();
+       
         
         //game.start();
     }

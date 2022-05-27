@@ -11,12 +11,12 @@ public class Ball{
 	public static final int startVelocityX = -2;
 	public static final int startVelocityY = -2;
 	
-	private int currentX;
-	private int currentY;
-	private int currentR;
+	private double currentX;
+	private double currentY;
+	private double currentR;
 	
-	private int currentVelocityX;
-	private int currentVelocityY;
+	private double currentVelocityX;
+	private double currentVelocityY;
 	
 	private JLabel ball;
 	
@@ -27,7 +27,7 @@ public class Ball{
 		setCurrentVelocityX(startVelocityX);
 		setCurrentVelocityY(startVelocityY);
 		setBall(new JLabel());
-		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		getBall().setBounds((int) getCurrentX(), (int)getCurrentY(),(int) getCurrentR(),(int) getCurrentR());
 		getBall().setIcon(new ImageIcon(getClass().getResource("../resources/redBall.png")));
 	}
 	
@@ -37,32 +37,32 @@ public class Ball{
 		setCurrentR(startR);
 		setCurrentVelocityX(startVelocityX);
 		setCurrentVelocityY(startVelocityY);
-		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		getBall().setBounds((int) getCurrentX(), (int) getCurrentY(),(int) getCurrentR(), (int)getCurrentR());
 		
 	}
 	
 
-	public int getCurrentX() {
+	public double getCurrentX() {
 		return currentX;
 	}
 
-	public void setCurrentX(int currentX) {
+	public void setCurrentX(double currentX) {
 		this.currentX = currentX;
 	}
 
-	public int getCurrentY() {
+	public double getCurrentY() {
 		return currentY;
 	}
 
-	public void setCurrentY(int currentY) {
+	public void setCurrentY(double currentY) {
 		this.currentY = currentY;
 	}
 
-	public int getCurrentR() {
+	public double getCurrentR() {
 		return currentR;
 	}
 
-	public void setCurrentR(int currentR) {
+	public void setCurrentR(double currentR) {
 		this.currentR = currentR;
 	}
 
@@ -75,26 +75,26 @@ public class Ball{
 	}
 	
 	public void updateBall() {
-		getBall().setBounds(getCurrentX(), getCurrentY(), getCurrentR(), getCurrentR());
+		getBall().setBounds((int) getCurrentX(),(int) getCurrentY(),(int) getCurrentR(),(int) getCurrentR());
 	}
 
 
-	public int getCurrentVelocityX() {
+	public double getCurrentVelocityX() {
 		return currentVelocityX;
 	}
 
 
-	public void setCurrentVelocityX(int currentVelocityX) {
+	public void setCurrentVelocityX(double currentVelocityX) {
 		this.currentVelocityX = currentVelocityX;
 	}
 
 
-	public int getCurrentVelocityY() {
+	public double getCurrentVelocityY() {
 		return currentVelocityY;
 	}
 
 
-	public void setCurrentVelocityY(int currentVelocityY) {
+	public void setCurrentVelocityY(double currentVelocityY) {
 		this.currentVelocityY = currentVelocityY;
 	}
 	
