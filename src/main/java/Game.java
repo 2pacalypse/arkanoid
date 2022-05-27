@@ -47,6 +47,7 @@ public class Game {
 	private Ball ball = new Ball();
 	private Home home = new Home();
 	private Scores scores = new Scores();
+	private Options options = new Options();
 	private Level currentLevel = Level.dummyLevel();
 	
 	private int currentLevelIdx = 0;
@@ -65,6 +66,8 @@ public class Game {
 	
 	private int currentScore;
 	private JLabel currentScoreLabel = new JLabel();
+	
+	
 	
 
 	Game() {
@@ -87,6 +90,15 @@ public class Game {
 				return Level.dummyLevel();
 			}
 			
+		});
+		
+		levels.add(new Callable<Level>() {
+
+			@Override
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub
+				return Level.dummyLevel();
+			}
 			
 		});
 		
@@ -188,6 +200,12 @@ public class Game {
 				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 			}
 		});
+		
+		home.getButtons()[1].addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				((CardLayout) (cards.getLayout())).show(cards, "options");
+			}
+		});
 
 		home.getButtons()[0].addMouseListener(new MouseAdapter() {
 
@@ -200,7 +218,6 @@ public class Game {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-
 						play();
 
 					}
@@ -208,12 +225,29 @@ public class Game {
 				});
 				t.start();
 			}
-
 		});
+		
+		
+		for (int i = 0; i < 3; i++) {
+			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					currentLevelIdx = Integer.parseInt(((JLabel)(e.getComponent())).getText());
+					System.out.println(currentLevelIdx);
+					try {
+						currentLevel = levels.get(currentLevelIdx).call();
+						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			});
+		}
 
 		cards.add(panel, "panel");
 		cards.add(home.getPanel(), "home");
 		cards.add(scores.getPanel(), "scoretable");
+		cards.add(options.getPanel(), "options");
 		((CardLayout) (cards.getLayout())).show(cards, "home");
 
 		frame.add(cards);

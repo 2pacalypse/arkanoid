@@ -64,10 +64,16 @@ public class Scores {
 		DefaultTableModel tableModel = new DefaultTableModel() {
 
 			private static final long serialVersionUID = 1L;
+			Class[] types = { String.class, String.class, String.class, Integer.class };
 
 			@Override
 		    public boolean isCellEditable(int row, int column) {
 		       return false;
+		    }
+			
+		    @Override
+		    public Class getColumnClass(int columnIndex) {
+		        return this.types[columnIndex];
 		    }
 		};
 		
