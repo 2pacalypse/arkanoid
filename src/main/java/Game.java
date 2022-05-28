@@ -29,6 +29,9 @@ import javax.swing.JButton;
 import main.java.BallBrickIntersection.Side;
 
 public class Game {
+
+	
+
 	public static final String windowTitle = "Arkanoid";
 	public static final int boardWidth = 600;
 	public static final int boardHeight = 600;
@@ -55,6 +58,16 @@ public class Game {
 	
 	public static final int PADDLE_MAX_ANGLE = 70;
 	public static final int GAME_CYCLE_SLEEP_MS = 5;
+	
+	public static final String USERNAME_NOT_PROVIDED_TITLE = "Error";
+	public static final String USERNAME_NOT_PROVIDED_MESSAGE = "Please enter a user name";
+	public static final String GAME_OVER_TITLE = "Game over!";
+	public static final String GAME_OVER_MESSAGE = "Enter user name";
+	
+	public static final String GAME_BG_PATH = "../resources/gameBg.png";
+	public static final String PADDLE_BIG_PATH = "../resources/paddleBig.png";
+	public static final String PADDLE_MEDIUM_PATH = "../resources/paddle.png";
+	public static final String PADDLE_SMALL_PATH = "../resources/paddleSmall.png";
 	
 
 
@@ -108,7 +121,7 @@ public class Game {
 		getPanel().add(getCurrentLevel().getPanel());
 
 		bg.setBounds(0, 0, boardWidth, boardHeight);
-		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		bg.setIcon(new ImageIcon(getClass().getResource(GAME_BG_PATH)));
 
 		getPanel().add(bg);
 		getPanel().setComponentZOrder(bg, 3);
@@ -204,21 +217,21 @@ public class Game {
 					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
 					options.setSelectedPaddleIdx(ball_type);
 					if (ball_type == 0) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
 						paddle.setCurrentWidth(96);
 						options.getPaddle()
-								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+								.setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
 						options.getPaddle().setBounds(400, 500, 96, 24);
 					} else if (ball_type == 1) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
 						paddle.setCurrentWidth(128);
-						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						options.getPaddle().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
 						options.getPaddle().setBounds(400, 500, 128, 24);
 					} else if (ball_type == 2) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
 						paddle.setCurrentWidth(160);
 						options.getPaddle()
-								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+								.setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
 						options.getPaddle().setBounds(400, 500, 160, 24);
 					}
 				}
@@ -649,11 +662,11 @@ public class Game {
 
 		}
 
-		String name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
+		String name = JOptionPane.showInputDialog(getPanel(), GAME_OVER_MESSAGE, GAME_OVER_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
 		while (name == null || name.isEmpty()) {
-			JOptionPane.showMessageDialog(getPanel(), "Please enter a user name", "Error", JOptionPane.ERROR_MESSAGE);
-			name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
+			JOptionPane.showMessageDialog(getPanel(), USERNAME_NOT_PROVIDED_MESSAGE, USERNAME_NOT_PROVIDED_TITLE, JOptionPane.ERROR_MESSAGE);
+			name = JOptionPane.showInputDialog(getPanel(), GAME_OVER_MESSAGE, GAME_OVER_TITLE,
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		scores.addScore(name, currentScore);
