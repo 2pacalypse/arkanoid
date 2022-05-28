@@ -32,7 +32,7 @@ public class Home {
 		bg = new JLabel();
 		getPanel().setLayout(null);
 		
-		bg.setBounds(0, 0, Game.boardWidth, Game.boardHeight);
+		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
 		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
 		
 		

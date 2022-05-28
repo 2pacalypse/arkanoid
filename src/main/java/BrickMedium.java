@@ -1,10 +1,8 @@
 package main.java;
 
-import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.border.EtchedBorder;
+
 
 public class BrickMedium extends Brick {
 
@@ -12,7 +10,7 @@ public class BrickMedium extends Brick {
 		super(x, y);
 		//getLabel().setBackground(Color.orange);
 		//getLabel().setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-		getLabel().setIcon(new ImageIcon(getClass().getResource("../resources/orangeBrick.png")));
+		getLabel().setIcon(new ImageIcon(getClass().getResource(Game.ORANGE_BRICK_PATH)));
 		setNumHitsTobreak(2);
 	}
 	

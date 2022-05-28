@@ -12,8 +12,9 @@ public class BrickEasy extends Brick {
 		super(x, y);
 		setNumHitsTobreak(1);
 		//getLabel().setBackground(Color.red);
-		getLabel().setIcon(new ImageIcon(getClass().getResource("../resources/redBrick.png")));
 		//getLabel().setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		getLabel().setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
+
 	}
 
 }

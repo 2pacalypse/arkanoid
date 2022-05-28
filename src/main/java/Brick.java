@@ -1,16 +1,12 @@
 package main.java;
 
-import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import javax.swing.border.EtchedBorder;
 
 public class Brick {
 	
-	public static final int defaultWidth = 64;
-	public static final int defaultHeight = 32;
+
 
 	
 	
@@ -25,8 +21,8 @@ public class Brick {
 	Brick(int x, int y){
 		this.x = x;
 		this.y = y;
-		this.width = defaultWidth;
-		this.height = defaultHeight;
+		this.width = Game.BRICK_DEFAULT_WIDTH;
+		this.height = Game.BRICK_DEFAULT_HEIGHT;
 		this.label = new JLabel();
 		this.label.setLayout(null);
 		this.label.setBounds(x, y, width, height);

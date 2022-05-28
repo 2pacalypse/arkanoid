@@ -1,8 +1,6 @@
 package main.java;
 
-import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 public class BrickHard extends Brick {
@@ -11,7 +9,7 @@ public class BrickHard extends Brick {
 		super(x, y);
 		//getLabel().setBackground(Color.black);
 		//getLabel().setBorder(BorderFactory.createEtchedBorder(Color.darkGray, Color.lightGray));
-		getLabel().setIcon(new ImageIcon(getClass().getResource("../resources/yellowBrick.png")));
+		getLabel().setIcon(new ImageIcon(getClass().getResource(Game.YELLOW_BRICK_PATH)));
 		setNumHitsTobreak(3);
 	}
 	

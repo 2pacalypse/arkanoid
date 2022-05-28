@@ -2,11 +2,6 @@ package main.java;
 
 
 import java.awt.Color;
-
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -33,7 +28,7 @@ public class Options {
 	
 	Options(){
 		JLabel bg = new JLabel();
-		bg.setBounds(0, 0, Game.boardWidth, Game.boardHeight);
+		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
 		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
 		
 		panel = new JPanel();

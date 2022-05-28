@@ -32,22 +32,36 @@ public class Game {
 
 	
 
-	public static final String windowTitle = "Arkanoid";
-	public static final int boardWidth = 600;
-	public static final int boardHeight = 600;
-	public static final String homePanel = "home";
-	public static final String gamePanel = "game";
-	public static final int startingNumLives = 3;
-	public static final String numLivesLabelText = "Lives: ";
-	public static final String scoreLabelText = "Score: ";
-	public static final String levelLabelText = "Level: ";
+
+
+	public static final String WINDOW_TITLE = "Arkanoid";
+	public static final int BOARD_WIDTH = 600;
+	public static final int BOARD_HEIGHT = 600;
+
+	public static final int DEFAULT_NUM_LIVES = 3;
+	public static final String NUM_LIVES_LABEL_TEXT = "Lives: ";
+	public static final String SCORE_LABEL_TEXT = "Score: ";
+	public static final String LEVEL_LABEL_TEXT = "Level: ";
+	
+	public static final String CARDLAYOUT_HOME = "home";
+	public static final String CARDLAYOUT_GAME = "game";
+	public static final String CARDLAYOUT_OPTIONS = "options";
+	public static final String CARDLAYOUT_SCORES = "scoretable";
 	
 	
-	
+	public static final Color LEVEL_LABEL_COLOR = Color.BLACK;
+	public static final Color SCORE_LABEL_COLOR = Color.BLACK;
+	public static final Color NUM_LIVES_LABEL_COLOR = Color.BLACK;
 	public static final Color OPTIONS_LEVEL_BUTTON_COLOR = Color.gray;
 	public static final Color OPTIONS_LEVEL_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR = Color.gray;
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
+	
+
+	
+	public static final int PADDLE_MAX_ANGLE = 70;
+	public static final int GAME_CYCLE_SLEEP_MS = 5;
+	
 	
 	public static final String EXIT_TEXT = "EXIT_TEXT";
 	public static final String EXIT_TEXT_TITLE = "QUIT";
@@ -55,19 +69,27 @@ public class Game {
 	public static final String HELP_TEXT_TITLE = "HELP";
 	public static final String ABOUT_TEXT = "ABOUT_TEXT";
 	public static final String ABOUT_TEXT_TITLE = "ABOUT";
-	
-	public static final int PADDLE_MAX_ANGLE = 70;
-	public static final int GAME_CYCLE_SLEEP_MS = 5;
-	
 	public static final String USERNAME_NOT_PROVIDED_TITLE = "Error";
 	public static final String USERNAME_NOT_PROVIDED_MESSAGE = "Please enter a user name";
 	public static final String GAME_OVER_TITLE = "Game over!";
 	public static final String GAME_OVER_MESSAGE = "Enter user name";
+	public static final String LEVEL_PASS_TITLE = "Success!";
+	public static final String LEVEL_PASS_TEXT = "You have passed the level.";
+	public static final String ALL_LEVELS_PASS_TEXT = "You have cleared all the levels.";
+	public static final String  ALL_LEVELS_PASS_TITLE = "Success!";
 	
 	public static final String GAME_BG_PATH = "../resources/gameBg.png";
 	public static final String PADDLE_BIG_PATH = "../resources/paddleBig.png";
 	public static final String PADDLE_MEDIUM_PATH = "../resources/paddle.png";
 	public static final String PADDLE_SMALL_PATH = "../resources/paddleSmall.png";
+	
+	public static final String RED_BRICK_PATH = "../resources/redBrick.png";
+	public static final String ORANGE_BRICK_PATH = "../resources/orangeBrick.png";
+	public static final String YELLOW_BRICK_PATH = "../resources/yellowBrick.png";
+	
+	
+	public static final int BRICK_DEFAULT_WIDTH = 64;
+	public static final int BRICK_DEFAULT_HEIGHT = 32;
 	
 
 
@@ -91,7 +113,7 @@ public class Game {
 
 	private ArrayList<Callable<Level>> levels = new ArrayList<Callable<Level>>();
 
-	private int numLives = startingNumLives;
+	private int numLives = DEFAULT_NUM_LIVES;
 	private JLabel numLivesLabel = new JLabel();
 
 	private State state = State.START;
@@ -111,8 +133,8 @@ public class Game {
 		buildLevelList();
 
 
-		frame = new JFrame(windowTitle);
-		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
+		frame = new JFrame(WINDOW_TITLE);
+		frame.getContentPane().setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
 		frame.pack();
 
 		getPanel().setLayout(null);
@@ -120,29 +142,15 @@ public class Game {
 		getPanel().add(getBall().getBall());
 		getPanel().add(getCurrentLevel().getPanel());
 
-		bg.setBounds(0, 0, boardWidth, boardHeight);
+		bg.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
 		bg.setIcon(new ImageIcon(getClass().getResource(GAME_BG_PATH)));
 
 		getPanel().add(bg);
 		getPanel().setComponentZOrder(bg, 3);
 
-		getNumLivesLabel().setText(numLivesLabelText + numLives);
-		getNumLivesLabel().setBounds(boardWidth - 50, 0, 100, 20);
-		getNumLivesLabel().setForeground(Color.white);
-		getPanel().add(getNumLivesLabel());
-		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
 
-		currentScoreLabel.setText(scoreLabelText + currentScore);
-		currentScoreLabel.setBounds(0, 0, 100, 20);
-		currentScoreLabel.setForeground(Color.white);
-		getPanel().add(currentScoreLabel);
-		getPanel().setComponentZOrder(currentScoreLabel, 0);
 
-		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
-		currentLevelLabel.setBounds(275, 0, 100, 20);
-		currentLevelLabel.setForeground(Color.white);
-		getPanel().add(currentLevelLabel);
-		getPanel().setComponentZOrder(currentLevelLabel, 0);
+		buildTopBar();
 
 		
 		registerMouseMovementListener();
@@ -158,14 +166,35 @@ public class Game {
 
 
 
-		cards.add(panel, "panel");
-		cards.add(home.getPanel(), "home");
-		cards.add(scores.getPanel(), "scoretable");
-		cards.add(options.getPanel(), "options");
-		((CardLayout) (cards.getLayout())).show(cards, "home");
+		cards.add(panel, CARDLAYOUT_GAME);
+		cards.add(home.getPanel(), CARDLAYOUT_HOME);
+		cards.add(scores.getPanel(), CARDLAYOUT_SCORES);
+		cards.add(options.getPanel(), CARDLAYOUT_OPTIONS);
+		((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_HOME);
 
 		frame.add(cards);
 		frame.setVisible(true);
+	}
+	
+	private void buildTopBar() {
+		getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
+		getNumLivesLabel().setBounds(BOARD_WIDTH - 50, 0, 100, 20);
+		getNumLivesLabel().setForeground(NUM_LIVES_LABEL_COLOR);
+		getPanel().add(getNumLivesLabel());
+		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
+		
+		currentScoreLabel.setText(SCORE_LABEL_TEXT + currentScore);
+		currentScoreLabel.setBounds(0, 0, 100, 20);
+		currentScoreLabel.setForeground(SCORE_LABEL_COLOR);
+		getPanel().add(currentScoreLabel);
+		getPanel().setComponentZOrder(currentScoreLabel, 0);
+
+		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
+		currentLevelLabel.setBounds(275, 0, 100, 20);
+		currentLevelLabel.setForeground(LEVEL_LABEL_COLOR);
+		getPanel().add(currentLevelLabel);
+		getPanel().setComponentZOrder(currentLevelLabel, 0);
+		
 	}
 	
 	private void buildLevelList() {
@@ -254,7 +283,7 @@ public class Game {
 					
 					try {
 						currentLevel = levels.get(currentLevelIdx).call();
-						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+						currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 						
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -273,7 +302,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				((CardLayout) (cards.getLayout())).show(cards, "panel");
+				((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_GAME);
 				state = State.START;
 				Thread t = new Thread(new Runnable() {
 
@@ -291,14 +320,14 @@ public class Game {
 
 		home.getButtons()[1].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				((CardLayout) (cards.getLayout())).show(cards, "options");
+				((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_OPTIONS);
 			}
 		});
 
 		
 		home.getButtons()[2].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
+				((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_SCORES);
 			}
 		});
 
@@ -367,7 +396,7 @@ public class Game {
 					}
 
 				}
-				((CardLayout) (cards.getLayout())).show(cards, "home");
+				((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_HOME);
 
 			}
 		});
@@ -490,7 +519,7 @@ public class Game {
 		state = State.ZERO;
 		panel.remove(currentLevel.getPanel());
 		currentLevelIdx = 0;
-		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 
 		try {
 			currentLevel = levels.get(currentLevelIdx).call();
@@ -499,10 +528,10 @@ public class Game {
 		}
 		panel.add(currentLevel.getPanel(), 2);
 
-		setNumLives(startingNumLives);
-		getNumLivesLabel().setText(numLivesLabelText + numLives);
+		setNumLives(DEFAULT_NUM_LIVES);
+		getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 		currentScore = 0;
-		currentScoreLabel.setText(scoreLabelText + currentScore);
+		currentScoreLabel.setText(SCORE_LABEL_TEXT + currentScore);
 		panel.repaint();
 	}
 
@@ -536,7 +565,7 @@ public class Game {
 			}
 
 			if (getCurrentLevel().getBricks().size() == 0) {
-				JOptionPane.showMessageDialog(getPanel(), "You have passed the level.", "Success!",
+				JOptionPane.showMessageDialog(getPanel(), LEVEL_PASS_TEXT, LEVEL_PASS_TITLE,
 						JOptionPane.INFORMATION_MESSAGE);
 
 				state = State.START;
@@ -545,9 +574,9 @@ public class Game {
 
 				try {
 					currentLevel = levels.get(currentLevelIdx).call();
-					currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+					currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(getPanel(), "You have cleared all the levels.", "Success!",
+					JOptionPane.showMessageDialog(getPanel(), ALL_LEVELS_PASS_TEXT, ALL_LEVELS_PASS_TITLE,
 							JOptionPane.INFORMATION_MESSAGE);
 					break;
 				}
@@ -574,7 +603,7 @@ public class Game {
 
 			if (closest != null) {
 				currentScore += 10;
-				currentScoreLabel.setText(scoreLabelText + currentScore);
+				currentScoreLabel.setText(SCORE_LABEL_TEXT + currentScore);
 
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
@@ -631,7 +660,7 @@ public class Game {
 				getBall().updateBall();
 			} 
 
-			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= boardWidth - getBall().getCurrentR()) {
+			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= BOARD_WIDTH - getBall().getCurrentR()) {
 				getBall().setCurrentX(600 - getBall().getCurrentR());
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 				getBall().updateBall();
@@ -647,11 +676,11 @@ public class Game {
 				getBall().updateBall();
 			}
 
-			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= boardHeight) {
+			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= BOARD_HEIGHT) {
 				setNumLives(getNumLives() - 1);
 				getBall().reset();
 				setState(State.START);
-				getNumLivesLabel().setText(numLivesLabelText + numLives);
+				getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 
 			}
 			else {
@@ -678,7 +707,7 @@ public class Game {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		scores.addScore(name, currentScore);
-		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
+		((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_SCORES);
 
 		resetGame();
 	}
