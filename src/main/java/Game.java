@@ -39,6 +39,23 @@ public class Game {
 	public static final String scoreLabelText = "Score: ";
 	public static final String levelLabelText = "Level: ";
 	
+	
+	
+	public static final Color OPTIONS_LEVEL_BUTTON_COLOR = Color.gray;
+	public static final Color OPTIONS_LEVEL_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
+	public static final Color OPTIONS_PADDLE_BUTTON_COLOR = Color.gray;
+	public static final Color OPTIONS_PADDLE_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
+	
+	public static final String EXIT_TEXT = "EXIT_TEXT";
+	public static final String EXIT_TEXT_TITLE = "QUIT";
+	public static final String HELP_TEXT = "HELP_TEXT";
+	public static final String HELP_TEXT_TITLE = "HELP";
+	public static final String ABOUT_TEXT = "ABOUT_TEXT";
+	public static final String ABOUT_TEXT_TITLE = "ABOUT";
+	
+	public static final int PADDLE_MAX_ANGLE = 70;
+	public static final int GAME_CYCLE_SLEEP_MS = 5;
+	
 
 
 	enum State {
@@ -78,42 +95,8 @@ public class Game {
 	int mouseLastPosX = paddle.getCurrentX();
 
 	Game() {
-		levels.add(new Callable<Level>() {
+		buildLevelList();
 
-			@Override
-			public Level call() throws Exception {
-				// TODO Auto-generated method stub
-				return Level.firstLevel();
-			}
-
-		});
-
-		levels.add(new Callable<Level>() {
-
-			@Override
-			public Level call() throws Exception {
-				// TODO Auto-generated method stub	
-				return Level.dummyLevel();
-			}
-
-		});
-
-		levels.add(new Callable<Level>() {
-
-			@Override
-			public Level call() throws Exception {
-				// TODO Auto-generated method stub
-				return Level.dummyLevel();
-			}
-
-		});
-		
-		try {
-			currentLevel = levels.get(0).call();
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
 
 		frame = new JFrame(windowTitle);
 		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -172,13 +155,52 @@ public class Game {
 		frame.setVisible(true);
 	}
 	
+	private void buildLevelList() {
+		levels.add(new Callable<Level>() {
+
+			@Override
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub
+				return Level.firstLevel();
+			}
+
+		});
+
+		levels.add(new Callable<Level>() {
+
+			@Override
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub	
+				return Level.dummyLevel();
+			}
+
+		});
+
+		levels.add(new Callable<Level>() {
+
+			@Override
+			public Level call() throws Exception {
+				// TODO Auto-generated method stub
+				return Level.dummyLevel();
+			}
+
+		});
+		
+		try {
+			currentLevel = levels.get(0).call();
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+	}
+	
 	
 	private void registerOptionsPaddleButtonListeners() {
 		for (int i = 0; i < 3; i++) {
 			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setBackground(Color.gray);
-					e.getComponent().setBackground(Color.DARK_GRAY);
+					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setBackground(OPTIONS_PADDLE_BUTTON_COLOR);
+					e.getComponent().setBackground(OPTIONS_PADDLE_BUTTON_COLOR_SELECTED);
 					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
 					options.setSelectedPaddleIdx(ball_type);
 					if (ball_type == 0) {
@@ -208,16 +230,14 @@ public class Game {
 		for (int i = 0; i < 3; i++) {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					options.getLevelButtons()[currentLevelIdx].setBackground(Color.gray);
+					options.getLevelButtons()[currentLevelIdx].setBackground(OPTIONS_LEVEL_BUTTON_COLOR);
 					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
-					options.getLevelButtons()[currentLevelIdx].setBackground(Color.gray);
-					e.getComponent().setBackground(Color.DARK_GRAY);
+					e.getComponent().setBackground(OPTIONS_LEVEL_BUTTON_COLOR_SELECTED);
 					
 					try {
 						currentLevel = levels.get(currentLevelIdx).call();
 						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
 					} catch (Exception e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
@@ -265,7 +285,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				JOptionPane.showMessageDialog(cards, "help text", "Help", JOptionPane.QUESTION_MESSAGE);
+				JOptionPane.showMessageDialog(cards, HELP_TEXT, HELP_TEXT_TITLE, JOptionPane.QUESTION_MESSAGE);
 
 			}
 		});
@@ -274,7 +294,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				JOptionPane.showMessageDialog(cards, "ABOUT TEXT", "About", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(cards, ABOUT_TEXT, ABOUT_TEXT_TITLE, JOptionPane.INFORMATION_MESSAGE);
 
 			}
 		});
@@ -282,7 +302,7 @@ public class Game {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(cards, EXIT_TEXT, EXIT_TEXT_TITLE, JOptionPane.YES_NO_OPTION) == 0) {
 					System.exit(0);
 				}
 
@@ -301,7 +321,7 @@ public class Game {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(cards, EXIT_TEXT, EXIT_TEXT_TITLE, JOptionPane.YES_NO_OPTION) == 0) {
 					System.exit(0);
 				}
 
@@ -443,6 +463,27 @@ public class Game {
 	public void setPanel(JPanel panel) {
 		this.panel = panel;
 	}
+	
+	private void resetGame() {
+		getBall().reset();
+		state = State.ZERO;
+		panel.remove(currentLevel.getPanel());
+		currentLevelIdx = 0;
+		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+
+		try {
+			currentLevel = levels.get(currentLevelIdx).call();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		panel.add(currentLevel.getPanel(), 2);
+
+		setNumLives(startingNumLives);
+		getNumLivesLabel().setText(numLivesLabelText + numLives);
+		currentScore = 0;
+		currentScoreLabel.setText(scoreLabelText + currentScore);
+		panel.repaint();
+	}
 
 	public void play() {
 		while (numLives > 0) {
@@ -469,24 +510,7 @@ public class Game {
 
 
 			if (state == State.INTERRUPTED) {
-				getBall().reset();
-				state = State.ZERO;
-				panel.remove(currentLevel.getPanel());
-				currentLevelIdx = 0;
-				currentLevelLabel.setText(levelLabelText + currentLevelIdx);
-
-				try {
-					currentLevel = levels.get(currentLevelIdx).call();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				panel.add(currentLevel.getPanel(), 2);
-
-				setNumLives(startingNumLives);
-				getNumLivesLabel().setText(numLivesLabelText + numLives);
-				currentScore = 0;
-				currentScoreLabel.setText(scoreLabelText + currentScore);
-
+				resetGame();
 				return;
 			}
 
@@ -538,28 +562,27 @@ public class Game {
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-					// closest.getLabel().setBackground(Color.green);
 
 				} else if (result.getSide() == Side.DOWN) {
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-					// closest.getLabel().setBackground(Color.orange);
+
 
 				} else if (result.getSide() == Side.UP) {
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
 					getBall().updateBall();
 					ball.setCurrentVelocityY(-ball.getCurrentVelocityY());
-					// closest.getLabel().setBackground(Color.yellow);
+					
 
 				} else if (result.getSide() == Side.LEFT) {
 					ball.setCurrentX(result.getIntersectionX() - ball.getCurrentR());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
-					// closest.getLabel().setBackground(Color.black);
+					
 				}
 
 				Brick newBrick = closest.hit();
@@ -573,7 +596,7 @@ public class Game {
 			} else if (ballpaddle.getDist() != Float.POSITIVE_INFINITY) {
 				double alpha = (ballpaddle.getIntersectionX() - paddle.getCurrentX())
 						/ (double) paddle.getCurrentWidth();
-				double theta = -70 * (1 - alpha) + 70 * alpha;
+				double theta = -PADDLE_MAX_ANGLE * (1 - alpha) + PADDLE_MAX_ANGLE * alpha;
 				double magnitude = Math
 						.sqrt(Math.pow(ball.getCurrentVelocityX(), 2) + Math.pow(ball.getCurrentVelocityY(), 2));
 
@@ -587,7 +610,7 @@ public class Game {
 				getBall().updateBall();
 			} 
 
-			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= 600 - getBall().getCurrentR()) {
+			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= boardWidth - getBall().getCurrentR()) {
 				getBall().setCurrentX(600 - getBall().getCurrentR());
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 				getBall().updateBall();
@@ -603,7 +626,7 @@ public class Game {
 				getBall().updateBall();
 			}
 
-			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= 600) {
+			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= boardHeight) {
 				setNumLives(getNumLives() - 1);
 				getBall().reset();
 				setState(State.START);
@@ -619,7 +642,7 @@ public class Game {
 			getPanel().repaint();
 
 			try {
-				Thread.sleep(5);
+				Thread.sleep(GAME_CYCLE_SLEEP_MS);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -636,25 +659,7 @@ public class Game {
 		scores.addScore(name, currentScore);
 		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 
-		getBall().reset();
-		setState(State.START);
-		setNumLives(startingNumLives);
-		getNumLivesLabel().setText(numLivesLabelText + numLives);
-		currentScore = 0;
-		currentScoreLabel.setText(scoreLabelText + currentScore);
-
-		state = State.START;
-		panel.remove(currentLevel.getPanel());
-		currentLevelIdx = 0;
-		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
-		try {
-			currentLevel = levels.get(currentLevelIdx).call();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		panel.add(currentLevel.getPanel(), 2);
-		panel.repaint();
-
+		resetGame();
 	}
 
 	public int getNumLives() {
