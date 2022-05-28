@@ -129,7 +129,7 @@ public class Scores {
 	
 	private void load() {
 		try {
-			FileInputStream fileIn = new FileInputStream("./bin/scores");
+			FileInputStream fileIn = new FileInputStream(Game.SCORE_SAVE_PATH);
 			ObjectInputStream objectIn = new ObjectInputStream(fileIn);
 			Vector<Vector<?>> obj = (Vector<Vector<?>>) objectIn.readObject();
 			objectIn.close();
@@ -148,7 +148,7 @@ public class Scores {
         try {
         	Object obj = ((DefaultTableModel) table.getModel()).getDataVector();
         	 
-            FileOutputStream fileOut = new FileOutputStream("./bin/scores");
+            FileOutputStream fileOut = new FileOutputStream(Game.SCORE_SAVE_PATH);
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(obj);
             objectOut.close();
@@ -167,10 +167,10 @@ public class Scores {
 		String date = dateFormatter.format(dt);
 		String time = timeFormatter.format(dt);
 		
-		if (table.getModel().getRowCount() == 10) {
-			int min_score = (int) table.getModel().getValueAt(9, 3);
+		if (table.getModel().getRowCount() == Game.MAX_NUM_SCORES_TO_KEEP) {
+			int min_score = (int) table.getModel().getValueAt(Game.MAX_NUM_SCORES_TO_KEEP - 1, Game.TABLE_SCORE_COLUMN_INDEX);
 			if ((int) score >= min_score) {
-				((DefaultTableModel) (table.getModel())).removeRow(9);
+				((DefaultTableModel) (table.getModel())).removeRow(Game.MAX_NUM_SCORES_TO_KEEP - 1);
 			}
 		}
 		

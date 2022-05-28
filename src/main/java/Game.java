@@ -102,6 +102,7 @@ public class Game {
 	public static final String[] SCORE_TABLE_COLUMNS = {"Player", "Date","Time", "Score"};
 	public static final String SCORE_SAVE_PATH = "./bin/scores";
 	public static final int SCORE_TABLE_ROW_HEIGHT = 20;
+	public static final int TABLE_SCORE_COLUMN_INDEX = 3;
 	
 
 
