@@ -179,11 +179,10 @@ public class Scores {
 				((DefaultTableModel) (table.getModel())).removeRow(Game.MAX_NUM_SCORES_TO_KEEP - 1);
 				((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
 			}
+		}else if (table.getModel().getRowCount() < Game.MAX_NUM_SCORES_TO_KEEP){
+			((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
 		}
-		
-		
-        
-		
+
         save();
 		
 	}

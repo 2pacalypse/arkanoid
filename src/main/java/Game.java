@@ -178,6 +178,8 @@ public class Game {
 		frame = new JFrame(WINDOW_TITLE);
 		frame.getContentPane().setPreferredSize(new Dimension(BOARD_WIDTH, BOARD_HEIGHT));
 		frame.pack();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
 
 		getPanel().setLayout(null);
 		getPanel().add(getPaddle().getBar());
@@ -803,5 +805,9 @@ public class Game {
 	public void setCurrentLevel(Level currentLevel) {
 		this.currentLevel = currentLevel;
 	}
+	
+    public static void main(String[] args){
+        Game g = new Game();
+     }
 
 }
