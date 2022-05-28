@@ -15,7 +15,6 @@ import java.util.concurrent.Callable;
 import javax.swing.AbstractAction;
 
 import javax.swing.ActionMap;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -40,7 +39,7 @@ public class Game {
 	public static final String levelLabelText = "Level: ";
 
 	enum State {
-		START, PLAY, INTERRUPTED, OVER
+		ZERO, START, PLAY, INTERRUPTED, OVER
 	};
 
 	private JFrame frame;
@@ -174,7 +173,7 @@ public class Game {
 			private static final long serialVersionUID = -7644732643919166651L;
 
 			public void actionPerformed(ActionEvent e) {
-
+				System.out.println("space pressed");
 				synchronized (lock) {
 					setState(State.PLAY);
 					lock.notify();
@@ -191,7 +190,9 @@ public class Game {
 			private static final long serialVersionUID = -7644732643919166651L;
 
 			public void actionPerformed(ActionEvent e) {
-				state = State.INTERRUPTED;
+				if (state == State.PLAY || state == State.START) {
+					state = State.INTERRUPTED;
+				}
 				((CardLayout) (cards.getLayout())).show(cards, "home");
 				
 			}
@@ -233,13 +234,13 @@ public class Game {
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
 				((CardLayout) (cards.getLayout())).show(cards, "panel");
+				state = State.START;
 				Thread t = new Thread(new Runnable() {
 
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
 						play();
-
 					}
 
 				});
@@ -358,8 +359,8 @@ public class Game {
 	}
 
 	public void play() {
-		panel.repaint();
 		while (numLives > 0) {
+			System.out.println("play begin");
 			synchronized (lock) {
 				while (getState() == State.START) {
 					try {
@@ -370,10 +371,11 @@ public class Game {
 					}
 				}
 			}
+			System.out.println("play lock passed");
 			
 			if (state == State.INTERRUPTED) {
 				getBall().reset();
-				state = State.START;
+				state = State.ZERO;
 				panel.remove(currentLevel.getPanel());
 				currentLevelIdx = 0;
 				currentLevelLabel.setText(levelLabelText + currentLevelIdx);
