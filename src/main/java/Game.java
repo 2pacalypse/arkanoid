@@ -4,6 +4,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -13,6 +15,7 @@ import java.util.concurrent.Callable;
 import javax.swing.AbstractAction;
 
 import javax.swing.ActionMap;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
@@ -194,6 +197,21 @@ public class Game {
 			}
 		});
 		
+		imap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK ), "quitAction");
+		amap2.put("quitAction", new AbstractAction() {
+
+			private static final long serialVersionUID = 9144157574387174169L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(cards,"exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+					System.exit(0);
+				}
+				
+			}
+			
+		});
+		
 		
 		
 
@@ -229,6 +247,37 @@ public class Game {
 			}
 		});
 		
+		home.getButtons()[3].addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				JOptionPane.showMessageDialog(cards, "help text", "Help", JOptionPane.QUESTION_MESSAGE);
+
+			}
+		});	
+		
+		home.getButtons()[4].addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				JOptionPane.showMessageDialog(cards, "ABOUT TEXT", "About", JOptionPane.INFORMATION_MESSAGE);
+
+			}
+		});	
+		home.getButtons()[5].addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				if (JOptionPane.showConfirmDialog(cards,"exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+					System.exit(0);
+				}
+				
+
+			}
+		});	
+		
+		
+	
 		
 		for (int i = 0; i < 3; i++) {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
