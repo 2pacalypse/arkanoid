@@ -1,14 +1,17 @@
 package main.java;
 
-import java.awt.CardLayout;
+
 import java.awt.Color;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+
 
 public class Options {
 
@@ -22,8 +25,11 @@ public class Options {
 	private JPanel panel;
 	
 	
-	private int currentLevelIdx;
-	private JLabel levelButtons[] = new JLabel[3];
+	private int currentLevelIdx = 0;
+	private int selectedPaddleIdx = 1;
+	private JButton levelButtons[] = new JButton[3];
+	private JButton paddleButtons[] = new JButton[3];
+	private JLabel paddle;
 	
 	Options(){
 		JLabel bg = new JLabel();
@@ -34,13 +40,15 @@ public class Options {
 		panel.setLayout(null);
 		
 		for (int i = 0; i < 3; i++) {
-			levelButtons[i] = new JLabel(Integer.toString(i), SwingConstants.CENTER);
+			levelButtons[i] = new JButton(Integer.toString(i));
 			levelButtons[i].setBounds( levelButtonStartX + (buttonWidth + margin) * i, levelButtonStartY, buttonWidth, buttonHeight);
 			levelButtons[i].setBackground(Color.gray);
 			levelButtons[i].setOpaque(true);
 			levelButtons[i].setForeground(Color.white);
+			levelButtons[i].setFocusable(false);
 			getPanel().add(levelButtons[i]);
 		}
+		
 		levelButtons[0].setBackground(Color.DARK_GRAY);
 		
 		for (int i = 0; i < 3; i++) {
@@ -48,10 +56,56 @@ public class Options {
 				public void mouseClicked(MouseEvent e) {
 					levelButtons[currentLevelIdx].setBackground(Color.gray);
 					e.getComponent().setBackground(Color.DARK_GRAY);
-					currentLevelIdx = Integer.parseInt(((JLabel)(e.getComponent())).getText());
+					currentLevelIdx = Integer.parseInt(((JButton)(e.getComponent())).getText());
 				}
 			});
 		}
+		
+		
+		
+		
+		for (int i = 0; i < 3; i++) {
+			paddleButtons[i] = new JButton();
+			paddleButtons[i].setText("Small");
+			paddleButtons[i].setActionCommand(Integer.toString(i));
+			paddleButtons[i].setBounds( levelButtonStartX + (100 + margin) * i, 400, 100, buttonHeight);
+			paddleButtons[i].setBackground(Color.gray);
+			paddleButtons[i].setOpaque(true);
+			paddleButtons[i].setForeground(Color.white);
+			paddleButtons[i].setFocusable(false);
+			getPanel().add(paddleButtons[i]);
+		}
+		
+		paddleButtons[1].setBackground(Color.DARK_GRAY);
+		
+		for (int i = 0; i < 3; i++) {
+			paddleButtons[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					paddleButtons[selectedPaddleIdx].setBackground(Color.gray);
+					e.getComponent().setBackground(Color.DARK_GRAY);
+					selectedPaddleIdx = Integer.parseInt(((JButton)(e.getComponent())).getActionCommand());
+					System.out.println(selectedPaddleIdx);
+				}
+			});
+		}
+		
+		setPaddle(new JLabel());
+		getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+		getPaddle().setBounds(400, 500, 128, 24);
+		panel.add(getPaddle());
+		
+		
+		
+
+        
+        
+  
+           
+        
+
+		
+		
+		
 		
 		panel.add(bg);
 		panel.setComponentZOrder(bg, panel.getComponentCount() - 1);
@@ -79,12 +133,42 @@ public class Options {
 	}
 
 
-	public JLabel[] getLevelButtons() {
+	public JButton[] getLevelButtons() {
 		return levelButtons;
 	}
 
 
-	public void setLevelButtons(JLabel levelButtons[]) {
+	public void setLevelButtons(JButton levelButtons[]) {
 		this.levelButtons = levelButtons;
+	}
+
+
+	public JButton[] getPaddleButtons() {
+		return paddleButtons;
+	}
+
+
+	public void setPaddleButtons(JButton paddleButtons[]) {
+		this.paddleButtons = paddleButtons;
+	}
+
+
+	public int getSelectedPaddleIdx() {
+		return selectedPaddleIdx;
+	}
+
+
+	public void setSelectedPaddleIdx(int selectedPaddleIdx) {
+		this.selectedPaddleIdx = selectedPaddleIdx;
+	}
+
+
+	public JLabel getPaddle() {
+		return paddle;
+	}
+
+
+	public void setPaddle(JLabel paddle) {
+		this.paddle = paddle;
 	}
 }

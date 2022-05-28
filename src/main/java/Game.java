@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import javax.swing.JButton;
 
 import main.java.BallBrickIntersection.Side;
 
@@ -231,7 +232,7 @@ public class Game {
 		for (int i = 0; i < 3; i++) {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					currentLevelIdx = Integer.parseInt(((JLabel)(e.getComponent())).getText());
+					currentLevelIdx = Integer.parseInt(((JButton)(e.getComponent())).getText());
 					System.out.println(currentLevelIdx);
 					try {
 						currentLevel = levels.get(currentLevelIdx).call();
@@ -243,6 +244,33 @@ public class Game {
 				}
 			});
 		}
+		
+		
+		for (int i = 0; i < 3; i++) {
+			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					int ball_type = Integer.parseInt(((JButton)(e.getComponent())).getActionCommand());
+					if (ball_type == 0) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						paddle.setCurrentWidth(96);
+						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						options.getPaddle().setBounds(400, 500, 96, 24);
+					}else if (ball_type == 1) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						paddle.setCurrentWidth(128);
+						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						options.getPaddle().setBounds(400, 500, 128, 24);
+					}else if (ball_type == 2) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						paddle.setCurrentWidth(160);
+						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						options.getPaddle().setBounds(400, 500, 160, 24);
+					}
+				}
+			});
+		}
+		
+		
 
 		cards.add(panel, "panel");
 		cards.add(home.getPanel(), "home");
