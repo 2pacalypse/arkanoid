@@ -17,6 +17,7 @@ public class Options {
 	
 	
 	private int selectedPaddleIdx = 1;
+	private int selectedLevelIdx = 0;
 	private JButton levelButtons[] = new JButton[3];
 	private JButton paddleButtons[] = new JButton[3];
 	private JLabel paddle;
@@ -144,5 +145,15 @@ public class Options {
 
 	public void setSelectedPaddleIdx(int selectedPaddleIdx) {
 		this.selectedPaddleIdx = selectedPaddleIdx;
+	}
+
+
+	public int getSelectedLevelIdx() {
+		return selectedLevelIdx;
+	}
+
+
+	public void setSelectedLevelIdx(int selectedLevelIdx) {
+		this.selectedLevelIdx = selectedLevelIdx;
 	}
 }

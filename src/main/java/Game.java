@@ -324,13 +324,14 @@ public class Game {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
 					panel.remove(currentLevel.getPanel());
-					options.getLevelButtons()[currentLevelIdx].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
+					options.getLevelButtons()[options.getSelectedLevelIdx()].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
 					
 					((JButton)e.getComponent()).setIcon(new ImageIcon(getClass().getResource(Game.BLUE_BRICK_PATH)));
 					
 					
 					try {
 						currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
+						options.setSelectedLevelIdx(currentLevelIdx);
 						currentLevel = levels.get(currentLevelIdx).call();
 						currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 						
@@ -569,7 +570,8 @@ public class Game {
 		state = State.ZERO;
 		panel.remove(currentLevel.getPanel());
 		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
-
+		
+		currentLevelIdx = options.getSelectedLevelIdx();
 		try {
 			currentLevel = levels.get(currentLevelIdx).call();
 		} catch (Exception e) {
