@@ -219,17 +219,20 @@ public class Game {
 					if (ball_type == 0) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
 						paddle.setCurrentWidth(96);
+						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
 						options.getPaddle().setBounds(400, 500, 96, 24);
 					} else if (ball_type == 1) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
 						paddle.setCurrentWidth(128);
+						paddle.updateBar();
 						options.getPaddle().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
 						options.getPaddle().setBounds(400, 500, 128, 24);
 					} else if (ball_type == 2) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
 						paddle.setCurrentWidth(160);
+						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
 						options.getPaddle().setBounds(400, 500, 160, 24);
@@ -243,16 +246,21 @@ public class Game {
 		for (int i = 0; i < 3; i++) {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
+					panel.remove(currentLevel.getPanel());
 					options.getLevelButtons()[currentLevelIdx].setBackground(OPTIONS_LEVEL_BUTTON_COLOR);
 					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
 					e.getComponent().setBackground(OPTIONS_LEVEL_BUTTON_COLOR_SELECTED);
 					
+					
 					try {
 						currentLevel = levels.get(currentLevelIdx).call();
 						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+						
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					panel.add(currentLevel.getPanel(), 2);
+					panel.repaint();
 				}
 			});
 		}
