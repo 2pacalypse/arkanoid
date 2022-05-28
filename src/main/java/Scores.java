@@ -177,12 +177,13 @@ public class Scores {
 			int min_score = (int) table.getModel().getValueAt(Game.MAX_NUM_SCORES_TO_KEEP - 1, Game.TABLE_SCORE_COLUMN_INDEX);
 			if ((int) score >= min_score) {
 				((DefaultTableModel) (table.getModel())).removeRow(Game.MAX_NUM_SCORES_TO_KEEP - 1);
+				((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
 			}
 		}
 		
 		
         
-		((DefaultTableModel) table.getModel()).addRow(new Object[]{player, date, time, score});
+		
         save();
 		
 	}

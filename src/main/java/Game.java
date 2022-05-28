@@ -569,9 +569,10 @@ public class Game {
 		getBall().reset();
 		state = State.ZERO;
 		panel.remove(currentLevel.getPanel());
-		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
+		
 		
 		currentLevelIdx = options.getSelectedLevelIdx();
+		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 		try {
 			currentLevel = levels.get(currentLevelIdx).call();
 		} catch (Exception e) {
@@ -583,6 +584,8 @@ public class Game {
 		getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 		currentScore = 0;
 		currentScoreLabel.setText(SCORE_LABEL_TEXT + currentScore);
+		getPaddle().setCurrentX(PADDLE_START_X);
+		getPaddle().updateBar();
 		panel.repaint();
 	}
 
@@ -633,6 +636,10 @@ public class Game {
 				}
 				panel.add(currentLevel.getPanel(), 2);
 				getBall().reset();
+				
+				getPaddle().setCurrentX(PADDLE_START_X);
+				getPaddle().updateBar();
+				
 				panel.repaint();
 
 				continue;
