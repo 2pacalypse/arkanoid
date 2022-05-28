@@ -52,12 +52,11 @@ public class Game {
 	private Scores scores = new Scores();
 	private Options options = new Options();
 	private Level currentLevel = Level.dummyLevel();
-	
+
 	private int currentLevelIdx = 0;
 	private JLabel currentLevelLabel = new JLabel();
-	
+
 	private ArrayList<Callable<Level>> levels = new ArrayList<Callable<Level>>();
-	
 
 	private int numLives = startingNumLives;
 	private JLabel numLivesLabel = new JLabel();
@@ -66,12 +65,9 @@ public class Game {
 	private Object lock = new Object();
 
 	JPanel cards = new JPanel(new CardLayout());
-	
+
 	private int currentScore;
 	private JLabel currentScoreLabel = new JLabel();
-	
-	
-	
 
 	Game() {
 		levels.add(new Callable<Level>() {
@@ -81,10 +77,9 @@ public class Game {
 				// TODO Auto-generated method stub
 				return Level.dummyLevel();
 			}
-			
-			
+
 		});
-		
+
 		levels.add(new Callable<Level>() {
 
 			@Override
@@ -92,9 +87,9 @@ public class Game {
 				// TODO Auto-generated method stub
 				return Level.dummyLevel();
 			}
-			
+
 		});
-		
+
 		levels.add(new Callable<Level>() {
 
 			@Override
@@ -102,12 +97,8 @@ public class Game {
 				// TODO Auto-generated method stub
 				return Level.dummyLevel();
 			}
-			
+
 		});
-		
-		
-	
-		
 
 		frame = new JFrame(windowTitle);
 		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));
@@ -117,42 +108,31 @@ public class Game {
 		getPanel().add(getPaddle().getBar());
 		getPanel().add(getBall().getBall());
 		getPanel().add(getCurrentLevel().getPanel());
-		
+
 		bg.setBounds(0, 0, boardWidth, boardHeight);
 		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
-		
+
 		getPanel().add(bg);
 		getPanel().setComponentZOrder(bg, 3);
-		
-		
-
-
-		
-		
 
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
 		getNumLivesLabel().setBounds(boardWidth - 50, 0, 100, 20);
 		getNumLivesLabel().setForeground(Color.white);
 		getPanel().add(getNumLivesLabel());
 		getPanel().setComponentZOrder(getNumLivesLabel(), 0);
-		
-		
+
 		currentScoreLabel.setText(scoreLabelText + currentScore);
 		currentScoreLabel.setBounds(0, 0, 100, 20);
 		currentScoreLabel.setForeground(Color.white);
 		getPanel().add(currentScoreLabel);
 		getPanel().setComponentZOrder(currentScoreLabel, 0);
-		
+
 		currentLevelLabel.setText(levelLabelText + currentLevelIdx);
 		currentLevelLabel.setBounds(275, 0, 100, 20);
 		currentLevelLabel.setForeground(Color.white);
 		getPanel().add(currentLevelLabel);
 		getPanel().setComponentZOrder(currentLevelLabel, 0);
 
-		
-		
-		
-		
 		getPanel().addMouseMotionListener(new MouseMotionListener() {
 
 			@Override
@@ -173,7 +153,7 @@ public class Game {
 			private static final long serialVersionUID = -7644732643919166651L;
 
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("space pressed");
+
 				synchronized (lock) {
 					setState(State.PLAY);
 					lock.notify();
@@ -181,8 +161,7 @@ public class Game {
 				}
 			}
 		});
-		
-		
+
 		InputMap imap2 = cards.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 		imap2.put(KeyStroke.getKeyStroke("BACK_SPACE"), "backSpaceAction");
 		ActionMap amap2 = cards.getActionMap();
@@ -190,38 +169,40 @@ public class Game {
 			private static final long serialVersionUID = -7644732643919166651L;
 
 			public void actionPerformed(ActionEvent e) {
-				if (state == State.PLAY || state == State.START) {
-					state = State.INTERRUPTED;
+
+				synchronized (lock) {
+					if (state == State.PLAY || state == State.START) {
+						state = State.INTERRUPTED;
+						lock.notify();
+					}
+
 				}
 				((CardLayout) (cards.getLayout())).show(cards, "home");
-				
+
 			}
 		});
-		
-		imap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK ), "quitAction");
+
+		imap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "quitAction");
 		amap2.put("quitAction", new AbstractAction() {
 
 			private static final long serialVersionUID = 9144157574387174169L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(cards,"exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
 					System.exit(0);
 				}
-				
+
 			}
-			
+
 		});
-		
-		
-		
 
 		home.getButtons()[2].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 			}
 		});
-		
+
 		home.getButtons()[1].addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				((CardLayout) (cards.getLayout())).show(cards, "options");
@@ -247,7 +228,7 @@ public class Game {
 				t.start();
 			}
 		});
-		
+
 		home.getButtons()[3].addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -255,8 +236,8 @@ public class Game {
 				JOptionPane.showMessageDialog(cards, "help text", "Help", JOptionPane.QUESTION_MESSAGE);
 
 			}
-		});	
-		
+		});
+
 		home.getButtons()[4].addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -264,26 +245,22 @@ public class Game {
 				JOptionPane.showMessageDialog(cards, "ABOUT TEXT", "About", JOptionPane.INFORMATION_MESSAGE);
 
 			}
-		});	
+		});
 		home.getButtons()[5].addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// TODO Auto-generated method stub
-				if (JOptionPane.showConfirmDialog(cards,"exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
 					System.exit(0);
 				}
-				
 
 			}
-		});	
-		
-		
-	
-		
+		});
+
 		for (int i = 0; i < 3; i++) {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					currentLevelIdx = Integer.parseInt(((JButton)(e.getComponent())).getText());
+					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
 					System.out.println(currentLevelIdx);
 					try {
 						currentLevel = levels.get(currentLevelIdx).call();
@@ -295,33 +272,32 @@ public class Game {
 				}
 			});
 		}
-		
-		
+
 		for (int i = 0; i < 3; i++) {
 			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					int ball_type = Integer.parseInt(((JButton)(e.getComponent())).getActionCommand());
+					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
 					if (ball_type == 0) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
 						paddle.setCurrentWidth(96);
-						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						options.getPaddle()
+								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
 						options.getPaddle().setBounds(400, 500, 96, 24);
-					}else if (ball_type == 1) {
+					} else if (ball_type == 1) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
 						paddle.setCurrentWidth(128);
 						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
 						options.getPaddle().setBounds(400, 500, 128, 24);
-					}else if (ball_type == 2) {
+					} else if (ball_type == 2) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
 						paddle.setCurrentWidth(160);
-						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						options.getPaddle()
+								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
 						options.getPaddle().setBounds(400, 500, 160, 24);
 					}
 				}
 			});
 		}
-		
-		
 
 		cards.add(panel, "panel");
 		cards.add(home.getPanel(), "home");
@@ -330,7 +306,7 @@ public class Game {
 		((CardLayout) (cards.getLayout())).show(cards, "home");
 
 		frame.add(cards);
-		frame.setVisible(true);	
+		frame.setVisible(true);
 
 	}
 
@@ -360,7 +336,6 @@ public class Game {
 
 	public void play() {
 		while (numLives > 0) {
-			System.out.println("play begin");
 			synchronized (lock) {
 				while (getState() == State.START) {
 					try {
@@ -371,50 +346,48 @@ public class Game {
 					}
 				}
 			}
-			System.out.println("play lock passed");
-			
+
 			if (state == State.INTERRUPTED) {
 				getBall().reset();
 				state = State.ZERO;
 				panel.remove(currentLevel.getPanel());
 				currentLevelIdx = 0;
 				currentLevelLabel.setText(levelLabelText + currentLevelIdx);
-				
-				
+
 				try {
 					currentLevel = levels.get(currentLevelIdx).call();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				panel.add(currentLevel.getPanel(), 2);
-				
-				
+
 				setNumLives(startingNumLives);
 				getNumLivesLabel().setText(numLivesLabelText + numLives);
 				currentScore = 0;
 				currentScoreLabel.setText(scoreLabelText + currentScore);
-				
+
 				return;
 			}
-			
+
 			if (getCurrentLevel().getBricks().size() == 0) {
-				JOptionPane.showMessageDialog(getPanel(), "You have passed the level.", "Success!", JOptionPane.INFORMATION_MESSAGE);
-				
+				JOptionPane.showMessageDialog(getPanel(), "You have passed the level.", "Success!",
+						JOptionPane.INFORMATION_MESSAGE);
+
 				state = State.START;
 				panel.remove(currentLevel.getPanel());
 				currentLevelIdx++;
-				
+
 				try {
 					currentLevel = levels.get(currentLevelIdx).call();
 					currentLevelLabel.setText(levelLabelText + currentLevelIdx);
 				} catch (Exception e) {
-					JOptionPane.showMessageDialog(getPanel(), "You have cleared all the levels.", "Success!", JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(getPanel(), "You have cleared all the levels.", "Success!",
+							JOptionPane.INFORMATION_MESSAGE);
 					break;
 				}
 				panel.add(currentLevel.getPanel(), 2);
 				getBall().reset();
 				panel.repaint();
-				
 
 				continue;
 			}
@@ -436,7 +409,7 @@ public class Game {
 			if (closest != null) {
 				currentScore += 10;
 				currentScoreLabel.setText(scoreLabelText + currentScore);
-				
+
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
 
@@ -525,7 +498,6 @@ public class Game {
 
 		}
 
-
 		String name = JOptionPane.showInputDialog(getPanel(), "Enter user name", "Game over!",
 				JOptionPane.INFORMATION_MESSAGE);
 		while (name == null || name.isEmpty()) {
@@ -535,14 +507,14 @@ public class Game {
 		}
 		scores.addScore(name, currentScore);
 		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
-		
+
 		getBall().reset();
 		setState(State.START);
 		setNumLives(startingNumLives);
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
 		currentScore = 0;
 		currentScoreLabel.setText(scoreLabelText + currentScore);
-		
+
 		state = State.START;
 		panel.remove(currentLevel.getPanel());
 		currentLevelIdx = 0;
@@ -554,8 +526,6 @@ public class Game {
 		}
 		panel.add(currentLevel.getPanel(), 2);
 		panel.repaint();
-		
-
 
 	}
 
