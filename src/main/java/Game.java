@@ -37,7 +37,7 @@ public class Game {
 	public static final String levelLabelText = "Level: ";
 
 	enum State {
-		START, PLAY, OVER
+		START, PLAY, INTERRUPTED, OVER
 	};
 
 	private JFrame frame;
@@ -188,6 +188,7 @@ public class Game {
 			private static final long serialVersionUID = -7644732643919166651L;
 
 			public void actionPerformed(ActionEvent e) {
+				state = State.INTERRUPTED;
 				((CardLayout) (cards.getLayout())).show(cards, "home");
 				
 			}
@@ -308,7 +309,7 @@ public class Game {
 	}
 
 	public void play() {
-
+		panel.repaint();
 		while (numLives > 0) {
 			synchronized (lock) {
 				while (getState() == State.START) {
@@ -319,6 +320,30 @@ public class Game {
 						e.printStackTrace();
 					}
 				}
+			}
+			
+			if (state == State.INTERRUPTED) {
+				getBall().reset();
+				state = State.START;
+				panel.remove(currentLevel.getPanel());
+				currentLevelIdx = 0;
+				currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+				
+				
+				try {
+					currentLevel = levels.get(currentLevelIdx).call();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				panel.add(currentLevel.getPanel(), 2);
+				
+				
+				setNumLives(startingNumLives);
+				getNumLivesLabel().setText(numLivesLabelText + numLives);
+				currentScore = 0;
+				currentScoreLabel.setText(scoreLabelText + currentScore);
+				
+				return;
 			}
 			
 			if (getCurrentLevel().getBricks().size() == 0) {
@@ -459,9 +484,10 @@ public class Game {
 		}
 		scores.addScore(name, currentScore);
 		((CardLayout) (cards.getLayout())).show(cards, "scoretable");
-		setNumLives(startingNumLives);
+		
 		getBall().reset();
 		setState(State.START);
+		setNumLives(startingNumLives);
 		getNumLivesLabel().setText(numLivesLabelText + numLives);
 		currentScore = 0;
 		currentScoreLabel.setText(scoreLabelText + currentScore);
