@@ -30,7 +30,7 @@ public class Brick {
 		this.label = new JLabel();
 		this.label.setLayout(null);
 		this.label.setBounds(x, y, width, height);
-		this.label.setOpaque(true);
+		this.label.setOpaque(false);
 	}
 	
 

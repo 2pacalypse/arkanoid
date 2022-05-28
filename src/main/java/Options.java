@@ -51,17 +51,6 @@ public class Options {
 		
 		levelButtons[0].setBackground(Color.DARK_GRAY);
 		
-		for (int i = 0; i < 3; i++) {
-			levelButtons[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					levelButtons[currentLevelIdx].setBackground(Color.gray);
-					e.getComponent().setBackground(Color.DARK_GRAY);
-					currentLevelIdx = Integer.parseInt(((JButton)(e.getComponent())).getText());
-				}
-			});
-		}
-		
-		
 		
 		
 		for (int i = 0; i < 3; i++) {
@@ -78,35 +67,12 @@ public class Options {
 		
 		paddleButtons[1].setBackground(Color.DARK_GRAY);
 		
-		for (int i = 0; i < 3; i++) {
-			paddleButtons[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					paddleButtons[selectedPaddleIdx].setBackground(Color.gray);
-					e.getComponent().setBackground(Color.DARK_GRAY);
-					selectedPaddleIdx = Integer.parseInt(((JButton)(e.getComponent())).getActionCommand());
-					System.out.println(selectedPaddleIdx);
-				}
-			});
-		}
-		
 		setPaddle(new JLabel());
 		getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
 		getPaddle().setBounds(400, 500, 128, 24);
 		panel.add(getPaddle());
 		
-		
-		
 
-        
-        
-  
-           
-        
-
-		
-		
-		
-		
 		panel.add(bg);
 		panel.setComponentZOrder(bg, panel.getComponentCount() - 1);
 		

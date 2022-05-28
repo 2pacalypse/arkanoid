@@ -4,6 +4,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -37,6 +38,8 @@ public class Game {
 	public static final String numLivesLabelText = "Lives: ";
 	public static final String scoreLabelText = "Score: ";
 	public static final String levelLabelText = "Level: ";
+	
+
 
 	enum State {
 		ZERO, START, PLAY, INTERRUPTED, OVER
@@ -68,6 +71,11 @@ public class Game {
 
 	private int currentScore;
 	private JLabel currentScoreLabel = new JLabel();
+	
+	boolean arrowMoveRight = false;
+	boolean arrowMoveLeft = false;
+	
+	int mouseLastPosX = paddle.getCurrentX();
 
 	Game() {
 		levels.add(new Callable<Level>() {
@@ -84,7 +92,7 @@ public class Game {
 
 			@Override
 			public Level call() throws Exception {
-				// TODO Auto-generated method stub
+				// TODO Auto-generated method stub	
 				return Level.dummyLevel();
 			}
 
@@ -140,81 +148,84 @@ public class Game {
 		getPanel().add(currentLevelLabel);
 		getPanel().setComponentZOrder(currentLevelLabel, 0);
 
-		getPanel().addMouseMotionListener(new MouseMotionListener() {
+		
+		registerMouseMovementListener();
+		registerArrowMovementListener();
+		registerBallKickListener();
+		registerBackListener();
+		registerQuitListener();
+		registerHomeButtonListeners();
+		registerOptionsLevelButtonListeners();
+		registerOptionsPaddleButtonListeners();
 
-			@Override
-			public void mouseDragged(MouseEvent e) {
-			}
+		
 
-			@Override
-			public void mouseMoved(MouseEvent e) {
-				paddle.setCurrentX(e.getX());
-				paddle.updateBar();
-			}
-		});
 
-		InputMap imap = getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
-		ActionMap amap = getPanel().getActionMap();
-		amap.put("spaceAction", new AbstractAction() {
-			private static final long serialVersionUID = -7644732643919166651L;
 
-			public void actionPerformed(ActionEvent e) {
+		cards.add(panel, "panel");
+		cards.add(home.getPanel(), "home");
+		cards.add(scores.getPanel(), "scoretable");
+		cards.add(options.getPanel(), "options");
+		((CardLayout) (cards.getLayout())).show(cards, "home");
 
-				synchronized (lock) {
-					setState(State.PLAY);
-					lock.notify();
-
-				}
-			}
-		});
-
-		InputMap imap2 = cards.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		imap2.put(KeyStroke.getKeyStroke("BACK_SPACE"), "backSpaceAction");
-		ActionMap amap2 = cards.getActionMap();
-		amap2.put("backSpaceAction", new AbstractAction() {
-			private static final long serialVersionUID = -7644732643919166651L;
-
-			public void actionPerformed(ActionEvent e) {
-
-				synchronized (lock) {
-					if (state == State.PLAY || state == State.START) {
-						state = State.INTERRUPTED;
-						lock.notify();
+		frame.add(cards);
+		frame.setVisible(true);
+	}
+	
+	
+	private void registerOptionsPaddleButtonListeners() {
+		for (int i = 0; i < 3; i++) {
+			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setBackground(Color.gray);
+					e.getComponent().setBackground(Color.DARK_GRAY);
+					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
+					options.setSelectedPaddleIdx(ball_type);
+					if (ball_type == 0) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						paddle.setCurrentWidth(96);
+						options.getPaddle()
+								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
+						options.getPaddle().setBounds(400, 500, 96, 24);
+					} else if (ball_type == 1) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						paddle.setCurrentWidth(128);
+						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+						options.getPaddle().setBounds(400, 500, 128, 24);
+					} else if (ball_type == 2) {
+						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						paddle.setCurrentWidth(160);
+						options.getPaddle()
+								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
+						options.getPaddle().setBounds(400, 500, 160, 24);
 					}
-
 				}
-				((CardLayout) (cards.getLayout())).show(cards, "home");
-
-			}
-		});
-
-		imap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "quitAction");
-		amap2.put("quitAction", new AbstractAction() {
-
-			private static final long serialVersionUID = 9144157574387174169L;
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
-					System.exit(0);
+			});
+		}
+	}
+	
+	private void registerOptionsLevelButtonListeners(){
+		for (int i = 0; i < 3; i++) {
+			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					options.getLevelButtons()[currentLevelIdx].setBackground(Color.gray);
+					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
+					options.getLevelButtons()[currentLevelIdx].setBackground(Color.gray);
+					e.getComponent().setBackground(Color.DARK_GRAY);
+					
+					try {
+						currentLevel = levels.get(currentLevelIdx).call();
+						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
-
-			}
-
-		});
-
-		home.getButtons()[2].addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
-			}
-		});
-
-		home.getButtons()[1].addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e) {
-				((CardLayout) (cards.getLayout())).show(cards, "options");
-			}
-		});
+			});
+		}
+	}
+	
+	private void registerHomeButtonListeners() {
 
 		home.getButtons()[0].addMouseListener(new MouseAdapter() {
 
@@ -233,6 +244,20 @@ public class Game {
 
 				});
 				t.start();
+			}
+		});
+
+
+		home.getButtons()[1].addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				((CardLayout) (cards.getLayout())).show(cards, "options");
+			}
+		});
+
+		
+		home.getButtons()[2].addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				((CardLayout) (cards.getLayout())).show(cards, "scoretable");
 			}
 		});
 
@@ -264,57 +289,135 @@ public class Game {
 			}
 		});
 
-		for (int i = 0; i < 3; i++) {
-			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
-					System.out.println(currentLevelIdx);
-					try {
-						currentLevel = levels.get(currentLevelIdx).call();
-						currentLevelLabel.setText(levelLabelText + currentLevelIdx);
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+	}
+	
+	private void registerQuitListener() {
+		InputMap imap = cards.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap amap = cards.getActionMap();
+		imap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.CTRL_DOWN_MASK), "quitAction");
+		amap.put("quitAction", new AbstractAction() {
+
+			private static final long serialVersionUID = 9144157574387174169L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (JOptionPane.showConfirmDialog(cards, "exit text", "Quit", JOptionPane.YES_NO_OPTION) == 0) {
+					System.exit(0);
 				}
-			});
-		}
 
-		for (int i = 0; i < 3; i++) {
-			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
-					if (ball_type == 0) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
-						paddle.setCurrentWidth(96);
-						options.getPaddle()
-								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleSmall.png")));
-						options.getPaddle().setBounds(400, 500, 96, 24);
-					} else if (ball_type == 1) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
-						paddle.setCurrentWidth(128);
-						options.getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
-						options.getPaddle().setBounds(400, 500, 128, 24);
-					} else if (ball_type == 2) {
-						paddle.getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
-						paddle.setCurrentWidth(160);
-						options.getPaddle()
-								.setIcon(new ImageIcon(getClass().getResource("../resources/paddleBig.png")));
-						options.getPaddle().setBounds(400, 500, 160, 24);
+			}
+
+		});
+	}
+	
+	private void registerBackListener() {
+		InputMap imap = cards.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		imap.put(KeyStroke.getKeyStroke("BACK_SPACE"), "backSpaceAction");
+		ActionMap amap = cards.getActionMap();
+		amap.put("backSpaceAction", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
+
+			public void actionPerformed(ActionEvent e) {
+
+				synchronized (lock) {
+					if (state == State.PLAY || state == State.START) {
+						state = State.INTERRUPTED;
+						lock.notify();
 					}
+
 				}
-			});
-		}
+				((CardLayout) (cards.getLayout())).show(cards, "home");
 
-		cards.add(panel, "panel");
-		cards.add(home.getPanel(), "home");
-		cards.add(scores.getPanel(), "scoretable");
-		cards.add(options.getPanel(), "options");
-		((CardLayout) (cards.getLayout())).show(cards, "home");
+			}
+		});
+	}
+	
+	private void registerBallKickListener() {
+		InputMap imap = getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		imap.put(KeyStroke.getKeyStroke("SPACE"), "spaceAction");
+		ActionMap amap = getPanel().getActionMap();
+		amap.put("spaceAction", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
 
-		frame.add(cards);
-		frame.setVisible(true);
+			public void actionPerformed(ActionEvent e) {
 
+				synchronized (lock) {
+					setState(State.PLAY);
+					lock.notify();
+
+				}
+			}
+		});
+	}
+	
+	private void registerMouseMovementListener() {
+		getPanel().addMouseMotionListener(new MouseMotionListener() {
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+			}
+
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				if (state == State.PLAY) {
+					getPaddle().setCurrentX(e.getX());
+					getPaddle().updateBar();
+				}
+
+
+			}
+		});
+	}
+	
+	private void registerArrowMovementListener() {
+		InputMap imap = getPanel().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap amap = getPanel().getActionMap();
+		
+		imap.put(KeyStroke.getKeyStroke("pressed RIGHT"), "rightArrowAction");
+		amap.put("rightArrowAction", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
+
+			public void actionPerformed(ActionEvent e) {
+				
+				arrowMoveRight = true;
+
+			}
+		});
+		
+		imap.put(KeyStroke.getKeyStroke("released RIGHT"), "rightArrowActionRelease");
+		amap.put("rightArrowActionRelease", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
+
+			public void actionPerformed(ActionEvent e) {
+				
+				arrowMoveRight = false;
+
+			}
+		});
+		
+		imap.put(KeyStroke.getKeyStroke("pressed LEFT"), "leftArrowAction");
+		amap.put("leftArrowAction", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
+
+			public void actionPerformed(ActionEvent e) {
+				
+				arrowMoveLeft = true;
+
+			}
+		});
+		
+		imap.put(KeyStroke.getKeyStroke("released LEFT"), "leftArrowActionRelease");
+		amap.put("leftArrowActionRelease", new AbstractAction() {
+			private static final long serialVersionUID = -7644732643919166651L;
+
+			public void actionPerformed(ActionEvent e) {
+				
+				arrowMoveLeft = false;
+
+			}
+		});
+
+		
 	}
 
 	public Paddle getPaddle() {
@@ -353,6 +456,17 @@ public class Game {
 					}
 				}
 			}
+			
+			if(arrowMoveRight) {
+				paddle.setCurrentX(paddle.getCurrentX() + 5);
+				paddle.updateBar();
+			}
+			
+			if(arrowMoveLeft) {
+				paddle.setCurrentX(paddle.getCurrentX() - 5);
+				paddle.updateBar();
+			}
+
 
 			if (state == State.INTERRUPTED) {
 				getBall().reset();
@@ -471,28 +585,35 @@ public class Game {
 				ball.setCurrentVelocityY(vy);
 				ball.setCurrentVelocityX(vx);
 				getBall().updateBall();
-			} else {
-				getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
-				getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
+			} 
+
+			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= 600 - getBall().getCurrentR()) {
+				getBall().setCurrentX(600 - getBall().getCurrentR());
+				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
+				getBall().updateBall();
+			}
+			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() <= 0) {
+				getBall().setCurrentY(0);
+				getBall().setCurrentVelocityY(-getBall().getCurrentVelocityY());
+				getBall().updateBall();
+			}
+			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() <= 0) {
+				getBall().setCurrentX(0);
+				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 				getBall().updateBall();
 			}
 
-			if (getBall().getCurrentX() >= 600 - getBall().getCurrentR()) {
-				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
-			}
-			if (getBall().getCurrentY() <= 0) {
-				getBall().setCurrentVelocityY(-getBall().getCurrentVelocityY());
-			}
-			if (getBall().getCurrentX() <= 0) {
-				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
-			}
-
-			if (getBall().getCurrentY() >= 600) {
+			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= 600) {
 				setNumLives(getNumLives() - 1);
 				getBall().reset();
 				setState(State.START);
 				getNumLivesLabel().setText(numLivesLabelText + numLives);
 
+			}
+			else {
+				getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
+				getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
+				getBall().updateBall();
 			}
 
 			getPanel().repaint();

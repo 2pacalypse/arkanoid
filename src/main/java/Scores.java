@@ -35,9 +35,6 @@ public class Scores {
 		bg.setBounds(0, 0, Game.boardWidth, Game.boardHeight);
 		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
 		
-
-		
-		
 		panel = new JPanel();
 
 		
