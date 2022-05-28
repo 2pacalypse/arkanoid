@@ -23,17 +23,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 public class Scores {
-	public static final Vector<String> columnNames = new Vector<String>(Arrays.asList(new String[]{"Player", "Date","Time", "Score"}));
-	
+	private Vector<String> columnNames;
 	private JPanel panel;
 	private JTable table;
 	private JScrollPane jsp;
 
 	Scores(){
+		columnNames = new Vector<String>(Arrays.asList(Game.SCORE_TABLE_COLUMNS));
 		
 		JLabel bg = new JLabel();
 		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
-		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		bg.setIcon(new ImageIcon(getClass().getResource(Game.GAME_BG_PATH)));
 		
 		panel = new JPanel();
 
@@ -48,13 +48,11 @@ public class Scores {
 		
 		jsp.setBorder(BorderFactory.createEmptyBorder());
 		jsp.setBounds(100, 50, 400, 400);
+		
 		panel.add(jsp);
 		
-
-
-		
 		table.getTableHeader().setResizingAllowed(false);
-		table.setRowHeight(20);
+		table.setRowHeight(Game.SCORE_TABLE_ROW_HEIGHT);
 
 
 		
@@ -76,7 +74,7 @@ public class Scores {
 		
 		table.setModel(tableModel);
 		
-		Path path = Paths.get("./bin/scores");
+		Path path = Paths.get(Game.SCORE_SAVE_PATH);
 		if (Files.exists(path)) {
 			load();
 		}else {
@@ -105,7 +103,7 @@ public class Scores {
 		
 		
 		getPanel().add(bg);
-		getPanel().setComponentZOrder(bg, 1);
+		getPanel().setComponentZOrder(bg, panel.getComponentCount() - 1);
 		jsp.setOpaque(false);
 		jsp.getViewport().setOpaque(false);
 		

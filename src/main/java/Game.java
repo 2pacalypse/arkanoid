@@ -29,11 +29,6 @@ import javax.swing.JButton;
 import main.java.BallBrickIntersection.Side;
 
 public class Game {
-
-	
-
-
-
 	public static final String WINDOW_TITLE = "Arkanoid";
 	public static final int BOARD_WIDTH = 600;
 	public static final int BOARD_HEIGHT = 600;
@@ -101,7 +96,12 @@ public class Game {
 	public static final int PADDLE_SMALL_WIDTH = 96;
 	public static final int PADDLE_START_X = 300;
 	public static final int PADDLE_START_Y = 550;
-	public static final int PADDLE_HEIGHT = 32;
+	public static final int PADDLE_HEIGHT = 24;
+	
+	public static final int MAX_NUM_SCORES_TO_KEEP = 10;
+	public static final String[] SCORE_TABLE_COLUMNS = {"Player", "Date","Time", "Score"};
+	public static final String SCORE_SAVE_PATH = "./bin/scores";
+	public static final int SCORE_TABLE_ROW_HEIGHT = 20;
 	
 
 
@@ -255,28 +255,28 @@ public class Game {
 				public void mouseClicked(MouseEvent e) {
 					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setBackground(OPTIONS_PADDLE_BUTTON_COLOR);
 					e.getComponent().setBackground(OPTIONS_PADDLE_BUTTON_COLOR_SELECTED);
-					int ball_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
-					options.setSelectedPaddleIdx(ball_type);
-					if (ball_type == 0) {
+					int paddle_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
+					options.setSelectedPaddleIdx(paddle_type);
+					if (paddle_type == 0) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
-						paddle.setCurrentWidth(96);
+						paddle.setCurrentWidth(PADDLE_SMALL_WIDTH);
 						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
-						options.getPaddle().setBounds(400, 500, 96, 24);
-					} else if (ball_type == 1) {
+						options.getPaddle().setBounds(400, 500, PADDLE_SMALL_WIDTH, PADDLE_HEIGHT);
+					} else if (paddle_type == 1) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
-						paddle.setCurrentWidth(128);
+						paddle.setCurrentWidth(PADDLE_MEDIUM_WIDTH);
 						paddle.updateBar();
 						options.getPaddle().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
-						options.getPaddle().setBounds(400, 500, 128, 24);
-					} else if (ball_type == 2) {
+						options.getPaddle().setBounds(400, 500, PADDLE_MEDIUM_WIDTH, PADDLE_HEIGHT);
+					} else if (paddle_type == 2) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
-						paddle.setCurrentWidth(160);
+						paddle.setCurrentWidth(PADDLE_BIG_WIDTH);
 						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
-						options.getPaddle().setBounds(400, 500, 160, 24);
+						options.getPaddle().setBounds(400, 500, PADDLE_BIG_WIDTH, PADDLE_HEIGHT);
 					}
 				}
 			});

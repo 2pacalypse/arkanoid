@@ -1,10 +1,8 @@
 package main.java;
 
-import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.border.EtchedBorder;
+
 
 public class BrickEasy extends Brick {
 
