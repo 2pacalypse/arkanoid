@@ -22,6 +22,7 @@ public class Options {
 	private JLabel paddle;
 	private JLabel selectLevel;
 	private JLabel selectPaddle;
+	private JLabel back;
 	
 	Options(){
 		JLabel bg = new JLabel();
@@ -30,6 +31,10 @@ public class Options {
 		
 		panel = new JPanel();
 		panel.setLayout(null);
+		
+		back = new JLabel("Press backspace to go back.");
+		back.setBounds(Game.PADDLE_BUTTONS_START_X + 30, Game.PADDLE_BUTTONS_START_Y + 100, 200, 50);
+		panel.add(back);
 		
 		selectLevel = new JLabel("Select Level");
 		selectLevel.setBounds(Game.LEVEL_BUTTONS_START_X + 75, Game.LEVEL_BUTTONS_START_Y - 50, 100, 50);

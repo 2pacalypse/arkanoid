@@ -99,7 +99,7 @@ public class Game {
 	public static final int PADDLE_BIG_WIDTH = 160;
 	public static final int PADDLE_MEDIUM_WIDTH = 128;
 	public static final int PADDLE_SMALL_WIDTH = 96;
-	public static final int PADDLE_START_X = 300;
+	public static final int PADDLE_START_X = 250;
 	public static final int PADDLE_START_Y = 550;
 	public static final int PADDLE_HEIGHT = 24;
 	
@@ -161,6 +161,8 @@ public class Game {
 	boolean arrowMoveLeft = false;
 	
 	int mouseLastPosX = paddle.getCurrentX();
+	
+	private JLabel back;
 
 	Game() {
 		buildLevelList();
@@ -175,15 +177,21 @@ public class Game {
 		getPanel().add(getBall().getBall());
 		getPanel().add(getCurrentLevel().getPanel());
 
-		bg.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
-		bg.setIcon(new ImageIcon(getClass().getResource(GAME_BG_PATH)));
 
-		getPanel().add(bg);
-		getPanel().setComponentZOrder(bg, 3);
 
 
 
 		buildTopBar();
+		
+		back = new JLabel("Press backspace to go back.");
+		back.setBounds(Game.PADDLE_BUTTONS_START_X + 30, Game.BOARD_HEIGHT - 20, 200, 20);
+		panel.add(back);
+		
+		bg.setBounds(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+		bg.setIcon(new ImageIcon(getClass().getResource(GAME_BG_PATH)));
+
+		getPanel().add(bg);
+		getPanel().setComponentZOrder(bg, getPanel().getComponentCount()  - 1);
 
 		
 		registerMouseMovementListener();
@@ -713,6 +721,8 @@ public class Game {
 			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= BOARD_HEIGHT) {
 				setNumLives(getNumLives() - 1);
 				getBall().reset();
+				getPaddle().setCurrentX(PADDLE_START_X);
+				getPaddle().updateBar();
 				setState(State.START);
 				getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 

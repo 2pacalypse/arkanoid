@@ -28,6 +28,7 @@ public class Scores {
 	private JPanel panel;
 	private JTable table;
 	private JScrollPane jsp;
+	private JLabel back;
 
 	Scores(){
 		columnNames = new Vector<String>(Arrays.asList(Game.SCORE_TABLE_COLUMNS));
@@ -36,16 +37,20 @@ public class Scores {
 		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
 		bg.setIcon(new ImageIcon(getClass().getResource(Game.GAME_BG_PATH)));
 		
+		
+		
 		panel = new JPanel();
-
-		
-
-		
-		
 		panel.setLayout(null);
+		
+		
+		back = new JLabel("Press backspace to go back.");
+		back.setBounds(Game.PADDLE_BUTTONS_START_X + 30, Game.PADDLE_BUTTONS_START_Y + 100, 200, 50);
+		panel.add(back);
+		
+		
 		table = new JTable();
 		jsp = new JScrollPane(table);
-		SwingUtilities.updateComponentTreeUI(jsp);
+		
 		
 		jsp.setBorder(BorderFactory.createEmptyBorder());
 		jsp.setBounds(100, 50, 400, 400);
