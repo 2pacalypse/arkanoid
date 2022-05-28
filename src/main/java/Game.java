@@ -47,10 +47,10 @@ public class Game {
 	public static final Color LEVEL_LABEL_COLOR = Color.BLACK;
 	public static final Color SCORE_LABEL_COLOR = Color.BLACK;
 	public static final Color NUM_LIVES_LABEL_COLOR = Color.BLACK;
-	public static final Color OPTIONS_LEVEL_BUTTON_COLOR = Color.gray;
-	public static final Color OPTIONS_LEVEL_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
-	public static final Color OPTIONS_PADDLE_BUTTON_COLOR = Color.gray;
-	public static final Color OPTIONS_PADDLE_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
+	
+
+
+	
 	public static final Color HOME_BUTTON_TEXT_COLOR = Color.white;
 	public static final Color SCORE_TABLE_HEADER_BG_COLOR = Color.lightGray;
 	public static final Color SCORE_TABLE_HEADER_FG_COLOR = Color.black;
@@ -90,6 +90,7 @@ public class Game {
 	public static final String RED_BRICK_PATH = "../resources/redBrick.png";
 	public static final String ORANGE_BRICK_PATH = "../resources/orangeBrick.png";
 	public static final String YELLOW_BRICK_PATH = "../resources/yellowBrick.png";
+	public static final String BLUE_BRICK_PATH = "../resources/blueBrick.png";
 	
 	
 	public static final int BRICK_DEFAULT_WIDTH = 64;
@@ -108,6 +109,20 @@ public class Game {
 	public static final int SCORE_TABLE_ROW_HEIGHT = 20;
 	public static final int TABLE_SCORE_COLUMN_INDEX = 3;
 	
+	public static final int HOME_BUTTONS_START_X = 75;
+	public static final int HOME_BUTTONS_START_Y = 250;
+	public static final int HOME_BUTTONS_MARGIN = 10;
+	
+	public static final int LEVEL_BUTTONS_START_X = 175;
+	public static final int LEVEL_BUTTONS_START_Y = 200;
+	public static final int LEVEL_BUTTONS_MARGIN = 10;
+	
+	public static final int PADDLE_BUTTONS_START_X = 175;
+	public static final int PADDLE_BUTTONS_START_Y = 350;
+	public static final int PADDLE_BUTTONS_MARGIN = 10;
+	public static final String[] PADDLE_BUTTONS_TEXTS = {"SMALL", "MEDIUM", "BIG"};
+	public static final int OPTIONS_PADDLE_START_X = 225;
+	public static final int OPTIONS_PADDLE_START_Y = 400;
 	
 
 
@@ -259,8 +274,8 @@ public class Game {
 		for (int i = 0; i < 3; i++) {
 			options.getPaddleButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
-					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setBackground(OPTIONS_PADDLE_BUTTON_COLOR);
-					e.getComponent().setBackground(OPTIONS_PADDLE_BUTTON_COLOR_SELECTED);
+					options.getPaddleButtons()[options.getSelectedPaddleIdx()].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
+					((JButton) e.getComponent() ).setIcon(new ImageIcon(getClass().getResource(Game.BLUE_BRICK_PATH)));
 					int paddle_type = Integer.parseInt(((JButton) (e.getComponent())).getActionCommand());
 					options.setSelectedPaddleIdx(paddle_type);
 					if (paddle_type == 0) {
@@ -269,20 +284,20 @@ public class Game {
 						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_SMALL_PATH)));
-						options.getPaddle().setBounds(400, 500, PADDLE_SMALL_WIDTH, PADDLE_HEIGHT);
+						options.getPaddle().setBounds(Game.OPTIONS_PADDLE_START_X, Game.OPTIONS_PADDLE_START_Y, PADDLE_SMALL_WIDTH, PADDLE_HEIGHT);
 					} else if (paddle_type == 1) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
 						paddle.setCurrentWidth(PADDLE_MEDIUM_WIDTH);
 						paddle.updateBar();
 						options.getPaddle().setIcon(new ImageIcon(getClass().getResource(PADDLE_MEDIUM_PATH)));
-						options.getPaddle().setBounds(400, 500, PADDLE_MEDIUM_WIDTH, PADDLE_HEIGHT);
+						options.getPaddle().setBounds(Game.OPTIONS_PADDLE_START_X, Game.OPTIONS_PADDLE_START_Y, PADDLE_MEDIUM_WIDTH, PADDLE_HEIGHT);
 					} else if (paddle_type == 2) {
 						paddle.getBar().setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
 						paddle.setCurrentWidth(PADDLE_BIG_WIDTH);
 						paddle.updateBar();
 						options.getPaddle()
 								.setIcon(new ImageIcon(getClass().getResource(PADDLE_BIG_PATH)));
-						options.getPaddle().setBounds(400, 500, PADDLE_BIG_WIDTH, PADDLE_HEIGHT);
+						options.getPaddle().setBounds(Game.OPTIONS_PADDLE_START_X, Game.OPTIONS_PADDLE_START_Y, PADDLE_BIG_WIDTH, PADDLE_HEIGHT);
 					}
 				}
 			});
@@ -294,12 +309,13 @@ public class Game {
 			options.getLevelButtons()[i].addMouseListener(new MouseAdapter() {
 				public void mouseClicked(MouseEvent e) {
 					panel.remove(currentLevel.getPanel());
-					options.getLevelButtons()[currentLevelIdx].setBackground(OPTIONS_LEVEL_BUTTON_COLOR);
-					currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
-					e.getComponent().setBackground(OPTIONS_LEVEL_BUTTON_COLOR_SELECTED);
+					options.getLevelButtons()[currentLevelIdx].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
+					
+					((JButton)e.getComponent()).setIcon(new ImageIcon(getClass().getResource(Game.BLUE_BRICK_PATH)));
 					
 					
 					try {
+						currentLevelIdx = Integer.parseInt(((JButton) (e.getComponent())).getText());
 						currentLevel = levels.get(currentLevelIdx).call();
 						currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 						
@@ -308,6 +324,7 @@ public class Game {
 					}
 					panel.add(currentLevel.getPanel(), 2);
 					panel.repaint();
+					
 				}
 			});
 		}
@@ -536,7 +553,6 @@ public class Game {
 		getBall().reset();
 		state = State.ZERO;
 		panel.remove(currentLevel.getPanel());
-		currentLevelIdx = 0;
 		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 
 		try {

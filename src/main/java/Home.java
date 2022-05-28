@@ -6,9 +6,6 @@ import javax.swing.JPanel;
 
 public class Home {
 	
-	public static final int startX = 75;
-	public static final int startY = 250;
-	public static final int margin = 10;
 
 
 	private JPanel panel;
@@ -31,8 +28,7 @@ public class Home {
 		
 		for (int i = 0; i < Game.HOME_NUM_BUTTONS; i++) {
 			getButtons()[i] = new JLabel();
-			getButtons()[i].setBounds( startX + (Game.BRICK_DEFAULT_WIDTH + margin) * i, startY, Game.BRICK_DEFAULT_WIDTH, Game.BRICK_DEFAULT_HEIGHT);
-			
+			getButtons()[i].setBounds( Game.HOME_BUTTONS_START_X + (Game.BRICK_DEFAULT_WIDTH + Game.HOME_BUTTONS_MARGIN) * i, Game.HOME_BUTTONS_START_Y, Game.BRICK_DEFAULT_WIDTH, Game.BRICK_DEFAULT_HEIGHT);
 			getButtons()[i].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
 			getButtons()[i].setText(Game.HOME_BUTTON_TEXTS[i]);
 			getButtons()[i].setVerticalTextPosition(JLabel.CENTER);
