@@ -51,7 +51,7 @@ public class Game {
 	private Home home = new Home();
 	private Scores scores = new Scores();
 	private Options options = new Options();
-	private Level currentLevel = Level.dummyLevel();
+	private Level currentLevel;
 
 	private int currentLevelIdx = 0;
 	private JLabel currentLevelLabel = new JLabel();
@@ -75,7 +75,7 @@ public class Game {
 			@Override
 			public Level call() throws Exception {
 				// TODO Auto-generated method stub
-				return Level.dummyLevel();
+				return Level.firstLevel();
 			}
 
 		});
@@ -99,6 +99,13 @@ public class Game {
 			}
 
 		});
+		
+		try {
+			currentLevel = levels.get(0).call();
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
 
 		frame = new JFrame(windowTitle);
 		frame.getContentPane().setPreferredSize(new Dimension(boardWidth, boardHeight));

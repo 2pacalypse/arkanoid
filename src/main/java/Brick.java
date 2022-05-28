@@ -9,8 +9,8 @@ import javax.swing.border.EtchedBorder;
 
 public class Brick {
 	
-	public static final int defaultWidth = 50;
-	public static final int defaultHeight = 20;
+	public static final int defaultWidth = 64;
+	public static final int defaultHeight = 32;
 
 	
 	
