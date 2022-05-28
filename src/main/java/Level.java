@@ -25,7 +25,7 @@ public class Level {
 
 		for(int i = 0; i < 1 ; i++) {
 			for (int j = 0; j < 1; j++) {
-				Brick brick = new BrickEasy(20 + j*(Brick.defaultWidth +margin), 200 + i*(Brick.defaultHeight + margin));
+				Brick brick = new BrickEasy(20 + j*(Game.BRICK_DEFAULT_WIDTH +margin), 200 + i*(Game.BRICK_DEFAULT_HEIGHT + margin));
 				level.getPanel().add(brick.getLabel());
 				level.getBricks().add(brick);
 			}
@@ -43,7 +43,7 @@ public class Level {
 
 		for(int i = 0; i < 2 ; i++) {
 			for (int j = 0; j < 6; j++) {
-				Brick brick = new BrickEasy(75 + j*(Brick.defaultWidth +margin), 100 + i*(Brick.defaultHeight + margin));
+				Brick brick = new BrickEasy(75 + j*(Game.BRICK_DEFAULT_WIDTH +margin), 100 + i*(Game.BRICK_DEFAULT_HEIGHT + margin));
 				level.getPanel().add(brick.getLabel());
 				level.getBricks().add(brick);
 			}
@@ -51,14 +51,14 @@ public class Level {
 		
 		for(int i = 2; i < 4 ; i++) {
 			for (int j = 0; j < 6; j++) {
-				Brick brick = new BrickMedium(75 + j*(Brick.defaultWidth +margin), 100 + i*(Brick.defaultHeight + margin));
+				Brick brick = new BrickMedium(75 + j*(Game.BRICK_DEFAULT_WIDTH +margin), 100 + i*(Game.BRICK_DEFAULT_HEIGHT + margin));
 				level.getPanel().add(brick.getLabel());
 				level.getBricks().add(brick);
 			}
 		}
 		for(int i = 4; i < 6 ; i++) {
 			for (int j = 0; j < 6; j++) {
-				Brick brick = new BrickHard(75 + j*(Brick.defaultWidth +margin), 100 + i*(Brick.defaultHeight + margin));
+				Brick brick = new BrickHard(75 + j*(Game.BRICK_DEFAULT_WIDTH +margin), 100 + i*(Game.BRICK_DEFAULT_HEIGHT + margin));
 				level.getPanel().add(brick.getLabel());
 				level.getBricks().add(brick);
 			}

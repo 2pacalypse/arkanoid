@@ -1,10 +1,5 @@
 package main.java;
 
-
-
-
-import java.awt.Color;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,13 +8,9 @@ public class Home {
 	
 	public static final int startX = 75;
 	public static final int startY = 250;
-	public static final int buttonWidth = 64;
-	public static final int buttonHeight = 32;
 	public static final int margin = 10;
 
-	public static final int numButtons = 6;
-	public static final String[] texts = {"PLAY", "OPTIONS", "SCORES", "HELP", "ABOUT", "EXIT"};
-	
+
 	private JPanel panel;
 	private JLabel[] buttons;
 	private JLabel bg;
@@ -28,29 +19,29 @@ public class Home {
 
 	public Home() {
 		setPanel(new JPanel());
-		setButtons(new JLabel[numButtons]);
+		setButtons(new JLabel[Game.HOME_NUM_BUTTONS]);
 		bg = new JLabel();
 		getPanel().setLayout(null);
 		
 		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
-		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		bg.setIcon(new ImageIcon(getClass().getResource(Game.GAME_BG_PATH)));
 		
 		
 
 		
-		for (int i = 0; i < numButtons; i++) {
+		for (int i = 0; i < Game.HOME_NUM_BUTTONS; i++) {
 			getButtons()[i] = new JLabel();
-			getButtons()[i].setBounds( startX + (buttonWidth + margin) * i, startY, buttonWidth, buttonHeight);
+			getButtons()[i].setBounds( startX + (Game.BRICK_DEFAULT_WIDTH + margin) * i, startY, Game.BRICK_DEFAULT_WIDTH, Game.BRICK_DEFAULT_HEIGHT);
 			
-			getButtons()[i].setIcon(new ImageIcon(getClass().getResource("../resources/redBrick.png")));
-			getButtons()[i].setText(texts[i]);
+			getButtons()[i].setIcon(new ImageIcon(getClass().getResource(Game.RED_BRICK_PATH)));
+			getButtons()[i].setText(Game.HOME_BUTTON_TEXTS[i]);
 			getButtons()[i].setVerticalTextPosition(JLabel.CENTER);
 			getButtons()[i].setHorizontalTextPosition(JLabel.CENTER);
-			getButtons()[i].setForeground(Color.white);
+			getButtons()[i].setForeground(Game.HOME_BUTTON_TEXT_COLOR);
 			getPanel().add(getButtons()[i]);
 		}
 		
-		panel.setComponentZOrder(bg, 6);
+		panel.setComponentZOrder(bg, panel.getComponentCount() - 1);
 		panel.add(bg);
 	}
 

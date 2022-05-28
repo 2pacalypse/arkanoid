@@ -9,24 +9,11 @@ import javax.swing.JLabel;
 
 public class Paddle {
 	
-	public static final int startX = 300;
-	public static final int startY = 550;
-	public static final int startWidth = 128;
-	public static final int startHeight = 24;
-	public static final Color startBarColor = Color.GRAY;
-	public static final Color startBorderColor = Color.BLACK;
-	public static final int startBorderThickness = 4;
-	
 	
 	private int currentX;
 	private int currentY;
 	private int currentWidth;
 	private int currentHeight;
-	private Color currentBarColor;
-	private Color currentBorderColor;
-	private int currentBorderThickness;
-	
-	
 	
 	
 	private JLabel bar;
@@ -34,18 +21,15 @@ public class Paddle {
 	
 	Paddle(){
 		
-		setCurrentX(startX);
-		setCurrentY(startY);
-		setCurrentWidth(startWidth);
-		setCurrentHeight(startHeight);
-		setCurrentBarColor(startBarColor);
-		setCurrentBorderColor(startBorderColor);
-		setCurrentBorderThickness(startBorderThickness);
+		setCurrentX(Game.PADDLE_START_X);
+		setCurrentY(Game.PADDLE_START_Y);
+		setCurrentWidth(Game.PADDLE_MEDIUM_WIDTH);
+		setCurrentHeight(Game.PADDLE_HEIGHT);
 		
 
 		setBar(new JLabel());
 		getBar().setBounds(getCurrentX(), getCurrentY(), getCurrentWidth(), getCurrentHeight());
-		getBar().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
+		getBar().setIcon(new ImageIcon(getClass().getResource(Game.PADDLE_MEDIUM_PATH)));
 
 	}
 
@@ -100,35 +84,6 @@ public class Paddle {
 	}
 
 
-	public Color getCurrentBarColor() {
-		return currentBarColor;
-	}
-
-
-	public void setCurrentBarColor(Color currentBarColor) {
-		this.currentBarColor = currentBarColor;
-	}
-
-
-	public Color getCurrentBorderColor() {
-		return currentBorderColor;
-	}
-
-
-	public void setCurrentBorderColor(Color currentBorderColor) {
-		this.currentBorderColor = currentBorderColor;
-	}
-
-
-	public int getCurrentBorderThickness() {
-		return currentBorderThickness;
-	}
-
-
-	public void setCurrentBorderThickness(int currentBorderThickness) {
-		this.currentBorderThickness = currentBorderThickness;
-	}
-	
 	public void updateBar() {
 		getBar().setBounds(getCurrentX(), getCurrentY(), getCurrentWidth(), getCurrentHeight());
 	}

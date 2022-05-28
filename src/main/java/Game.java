@@ -43,10 +43,10 @@ public class Game {
 	public static final String SCORE_LABEL_TEXT = "Score: ";
 	public static final String LEVEL_LABEL_TEXT = "Level: ";
 	
-	public static final String CARDLAYOUT_HOME = "home";
-	public static final String CARDLAYOUT_GAME = "game";
-	public static final String CARDLAYOUT_OPTIONS = "options";
-	public static final String CARDLAYOUT_SCORES = "scoretable";
+	private static final String CARDLAYOUT_HOME = "home";
+	private static final String CARDLAYOUT_GAME = "game";
+	private static final String CARDLAYOUT_OPTIONS = "options";
+	private static final String CARDLAYOUT_SCORES = "scoretable";
 	
 	
 	public static final Color LEVEL_LABEL_COLOR = Color.BLACK;
@@ -56,6 +56,11 @@ public class Game {
 	public static final Color OPTIONS_LEVEL_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR = Color.gray;
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
+	public static final Color HOME_BUTTON_TEXT_COLOR = Color.white;
+	
+	
+	public static final int HOME_NUM_BUTTONS = 6;
+	public static final String[] HOME_BUTTON_TEXTS = {"PLAY", "OPTIONS", "SCORES", "HELP", "ABOUT", "EXIT"};
 	
 
 	
@@ -90,6 +95,13 @@ public class Game {
 	
 	public static final int BRICK_DEFAULT_WIDTH = 64;
 	public static final int BRICK_DEFAULT_HEIGHT = 32;
+	
+	public static final int PADDLE_BIG_WIDTH = 160;
+	public static final int PADDLE_MEDIUM_WIDTH = 128;
+	public static final int PADDLE_SMALL_WIDTH = 96;
+	public static final int PADDLE_START_X = 300;
+	public static final int PADDLE_START_Y = 550;
+	public static final int PADDLE_HEIGHT = 32;
 	
 
 
