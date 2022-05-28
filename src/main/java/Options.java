@@ -29,7 +29,7 @@ public class Options {
 	Options(){
 		JLabel bg = new JLabel();
 		bg.setBounds(0, 0, Game.BOARD_WIDTH, Game.BOARD_HEIGHT);
-		bg.setIcon(new ImageIcon(getClass().getResource("../resources/gameBg.png")));
+		bg.setIcon(new ImageIcon(getClass().getResource(Game.GAME_BG_PATH)));
 		
 		panel = new JPanel();
 		panel.setLayout(null);
@@ -37,14 +37,14 @@ public class Options {
 		for (int i = 0; i < 3; i++) {
 			levelButtons[i] = new JButton(Integer.toString(i));
 			levelButtons[i].setBounds( levelButtonStartX + (buttonWidth + margin) * i, levelButtonStartY, buttonWidth, buttonHeight);
-			levelButtons[i].setBackground(Color.gray);
+			levelButtons[i].setBackground(Game.OPTIONS_LEVEL_BUTTON_COLOR);
 			levelButtons[i].setOpaque(true);
-			levelButtons[i].setForeground(Color.white);
+			levelButtons[i].setForeground(Game.OPTIONS_LEVEL_BUTTON_TEXT_COLOR);
 			levelButtons[i].setFocusable(false);
 			getPanel().add(levelButtons[i]);
 		}
 		
-		levelButtons[0].setBackground(Color.DARK_GRAY);
+		levelButtons[0].setBackground(Game.OPTIONS_LEVEL_BUTTON_COLOR_SELECTED);
 		
 		
 		
@@ -53,18 +53,18 @@ public class Options {
 			paddleButtons[i].setText("Small");
 			paddleButtons[i].setActionCommand(Integer.toString(i));
 			paddleButtons[i].setBounds( levelButtonStartX + (100 + margin) * i, 400, 100, buttonHeight);
-			paddleButtons[i].setBackground(Color.gray);
+			paddleButtons[i].setBackground(Game.OPTIONS_PADDLE_BUTTON_COLOR);
 			paddleButtons[i].setOpaque(true);
-			paddleButtons[i].setForeground(Color.white);
+			paddleButtons[i].setForeground(Game.OPTIONS_PADDLE_BUTTON_TEXT_COLOR);
 			paddleButtons[i].setFocusable(false);
 			getPanel().add(paddleButtons[i]);
 		}
 		
-		paddleButtons[1].setBackground(Color.DARK_GRAY);
+		paddleButtons[1].setBackground(Game.OPTIONS_PADDLE_BUTTON_COLOR_SELECTED);
 		
 		setPaddle(new JLabel());
-		getPaddle().setIcon(new ImageIcon(getClass().getResource("../resources/paddle.png")));
-		getPaddle().setBounds(400, 500, 128, 24);
+		getPaddle().setIcon(new ImageIcon(getClass().getResource(Game.PADDLE_MEDIUM_PATH)));
+		getPaddle().setBounds(400, 500, Game.PADDLE_MEDIUM_WIDTH, Game.PADDLE_HEIGHT);
 		panel.add(getPaddle());
 		
 

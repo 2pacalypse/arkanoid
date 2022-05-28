@@ -1,6 +1,6 @@
 package main.java;
 
-import java.awt.Color;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -22,6 +22,7 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
 public class Scores {
 	private Vector<String> columnNames;
 	private JPanel panel;
@@ -91,8 +92,8 @@ public class Scores {
 		table.getColumnModel().getColumn(1).setCellRenderer( centerRenderer );
 		table.getColumnModel().getColumn(2).setCellRenderer( centerRenderer );
 		table.getColumnModel().getColumn(3).setCellRenderer( centerRenderer );
-		table.getTableHeader().setBackground(Color.LIGHT_GRAY);
-		table.getTableHeader().setForeground(Color.black);
+		table.getTableHeader().setBackground(Game.SCORE_TABLE_HEADER_BG_COLOR);
+		table.getTableHeader().setForeground(Game.SCORE_TABLE_HEADER_FG_COLOR);
 		table.setAutoCreateRowSorter(true);
 		table.getRowSorter().toggleSortOrder(3);
 		table.getRowSorter().toggleSortOrder(3);

@@ -52,6 +52,10 @@ public class Game {
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR = Color.gray;
 	public static final Color OPTIONS_PADDLE_BUTTON_COLOR_SELECTED = Color.DARK_GRAY;
 	public static final Color HOME_BUTTON_TEXT_COLOR = Color.white;
+	public static final Color SCORE_TABLE_HEADER_BG_COLOR = Color.lightGray;
+	public static final Color SCORE_TABLE_HEADER_FG_COLOR = Color.black;
+	public static final Color OPTIONS_LEVEL_BUTTON_TEXT_COLOR = Color.white;
+	public static final Color OPTIONS_PADDLE_BUTTON_TEXT_COLOR = Color.white;
 	
 	
 	public static final int HOME_NUM_BUTTONS = 6;
@@ -103,6 +107,7 @@ public class Game {
 	public static final String SCORE_SAVE_PATH = "./bin/scores";
 	public static final int SCORE_TABLE_ROW_HEIGHT = 20;
 	public static final int TABLE_SCORE_COLUMN_INDEX = 3;
+	
 	
 
 
