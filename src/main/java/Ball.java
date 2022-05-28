@@ -4,12 +4,7 @@ import javax.swing.JLabel;
 
 public class Ball{
 	
-	public static final int startX = 300;
-	public static final int startY = 500;
-	public static final int startR = 24;
-	
-	public static final int startVelocityX = -2;
-	public static final int startVelocityY = -2;
+
 	
 	private double currentX;
 	private double currentY;
@@ -21,22 +16,22 @@ public class Ball{
 	private JLabel ball;
 	
 	Ball(){
-		setCurrentX(startX);
-		setCurrentY(startY);
-		setCurrentR(startR);
-		setCurrentVelocityX(startVelocityX);
-		setCurrentVelocityY(startVelocityY);
+		setCurrentX(Game.BALL_START_X);
+		setCurrentY(Game.BALL_START_Y);
+		setCurrentR(Game.BALL_START_R);
+		setCurrentVelocityX(Game.BALL_START_VELOCITY_X);
+		setCurrentVelocityY(Game.BALL_START_VELOCITY_Y);
 		setBall(new JLabel());
 		getBall().setBounds((int) getCurrentX(), (int)getCurrentY(),(int) getCurrentR(),(int) getCurrentR());
-		getBall().setIcon(new ImageIcon(getClass().getResource("../resources/redBall.png")));
+		getBall().setIcon(new ImageIcon(getClass().getResource(Game.BALL_RED_PATH)));
 	}
 	
 	public void reset() {
-		setCurrentX(startX);
-		setCurrentY(startY);
-		setCurrentR(startR);
-		setCurrentVelocityX(startVelocityX);
-		setCurrentVelocityY(startVelocityY);
+		setCurrentX(Game.BALL_START_X);
+		setCurrentY(Game.BALL_START_Y);
+		setCurrentR(Game.BALL_START_R);
+		setCurrentVelocityX(Game.BALL_START_VELOCITY_X);
+		setCurrentVelocityY(Game.BALL_START_VELOCITY_Y);
 		getBall().setBounds((int) getCurrentX(), (int) getCurrentY(),(int) getCurrentR(), (int)getCurrentR());
 		
 	}

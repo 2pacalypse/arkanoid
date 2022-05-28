@@ -124,6 +124,13 @@ public class Game {
 	public static final int OPTIONS_PADDLE_START_X = 225;
 	public static final int OPTIONS_PADDLE_START_Y = 400;
 	
+	public static final int BALL_START_X = 300;
+	public static final int BALL_START_Y = 525;
+	public static final int BALL_START_R = 24;
+	public static final int BALL_START_VELOCITY_X = -2;
+	public static final int BALL_START_VELOCITY_Y = -2;
+	public static final String BALL_RED_PATH = "../resources/redBall.png";
+	
 
 
 	enum State {
