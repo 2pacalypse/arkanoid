@@ -67,12 +67,12 @@ public class Game {
 	public static final int GAME_CYCLE_SLEEP_MS = 5;
 	
 	
-	public static final String EXIT_TEXT = "EXIT_TEXT";
-	public static final String EXIT_TEXT_TITLE = "QUIT";
-	public static final String HELP_TEXT = "HELP_TEXT";
+	public static final String EXIT_TEXT = "Are you sure you want to exit the game?";
+	public static final String EXIT_TEXT_TITLE = "Quit";
+	public static final String HELP_TEXT = "<html><ul><li>Yellow Bricks: 3 hitsç</li><li>Orange Bricks: 2 hits.</li><li>Red Bricks: 1 hit.</li><li>Move either with mouse or left and right arrow keys.</li> <li>Get back to home with backspace key.</li><li>Only top 10 scores are saved.</li></ul></html>";
 	public static final String HELP_TEXT_TITLE = "HELP";
 	public static final String ABOUT_TEXT = "ABOUT_TEXT";
-	public static final String ABOUT_TEXT_TITLE = "ABOUT";
+	public static final String ABOUT_TEXT_TITLE = "About";
 	public static final String USERNAME_NOT_PROVIDED_TITLE = "Error";
 	public static final String USERNAME_NOT_PROVIDED_MESSAGE = "Please enter a user name";
 	public static final String GAME_OVER_TITLE = "Game over!";
