@@ -39,12 +39,12 @@ public class Level {
 		return level;
 	}
 	
-	public static Level secondLevel() {
+	public static Level randomLevel(int desired) {
 		Level level = new Level();
 		
-		int numBricksWanted = 10;
-		int frameTop = 400;
-		int frameBottom = 0;
+		int numBricksWanted = desired;
+		int frameTop = 350;
+		int frameBottom = 50;
 		int frameLeft = 0;
 		int frameRight = 600 - Game.BRICK_DEFAULT_WIDTH;
 		Random rnd = new Random(42);

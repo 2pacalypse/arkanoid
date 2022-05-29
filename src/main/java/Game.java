@@ -105,7 +105,7 @@ public class Game {
 	
 	public static final int MAX_NUM_SCORES_TO_KEEP = 10;
 	public static final String[] SCORE_TABLE_COLUMNS = {"Player", "Date","Time", "Score"};
-	public static final String SCORE_SAVE_PATH = "./bin/scores";
+	public static final String SCORE_SAVE_PATH = "./scores";
 	public static final int SCORE_TABLE_ROW_HEIGHT = 20;
 	public static final int TABLE_SCORE_COLUMN_INDEX = 3;
 	
@@ -253,7 +253,7 @@ public class Game {
 			@Override
 			public Level call() throws Exception {
 				// TODO Auto-generated method stub
-				return Level.secondLevel();
+				return Level.randomLevel(10);
 			}
 
 		});
@@ -263,7 +263,7 @@ public class Game {
 			@Override
 			public Level call() throws Exception {
 				// TODO Auto-generated method stub	
-				return Level.dummyLevel();
+				return Level.randomLevel(20);
 			}
 
 		});
@@ -273,7 +273,7 @@ public class Game {
 			@Override
 			public Level call() throws Exception {
 				// TODO Auto-generated method stub
-				return Level.dummyLevel();
+				return Level.randomLevel(50);
 			}
 
 		});
@@ -696,7 +696,6 @@ public class Game {
 				}
 
 				Brick newBrick = closest.hit();
-				System.out.println(closest + " "+ newBrick);
 				getCurrentLevel().getBricks().remove(closest);
 				getCurrentLevel().getPanel().remove(closest.getLabel());
 				if (newBrick != null) {
