@@ -273,7 +273,7 @@ public class Game {
 			@Override
 			public Level call() throws Exception {
 				// TODO Auto-generated method stub
-				return Level.randomLevel(50);
+				return Level.randomLevel(30);
 			}
 
 		});
