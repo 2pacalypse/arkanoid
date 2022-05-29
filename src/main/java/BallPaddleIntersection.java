@@ -13,10 +13,10 @@ public class BallPaddleIntersection {
 		double k = (paddle.getCurrentY() - ballRadius - ballCenterY) /(double) ball.getCurrentVelocityY();
 		double x = (int) (ballCenterX + k*ball.getCurrentVelocityX());
 		
-		if (ballCenterY + ballRadius <= paddle.getCurrentY() && 
-			ballCenterY + ballRadius + ball.getCurrentVelocityY() >= paddle.getCurrentY() &&
-			x + ballRadius >= paddle.getCurrentX() &&
-			x <= paddle.getCurrentX() + paddle.getCurrentWidth() + ballRadius) {
+		if (ballCenterY + ballRadius <= paddle.getCurrentY() && //ball is above the paddle previously 
+			ballCenterY + ballRadius + ball.getCurrentVelocityY() >= paddle.getCurrentY() && // ball will be below the paddle in the next frame
+			x + ballRadius >= paddle.getCurrentX() && // ball will be within the paddle 
+			x <= paddle.getCurrentX() + paddle.getCurrentWidth() + ballRadius) { //wrt x axis
 			dist = Math.pow(paddle.getCurrentY() - ballCenterY, 2) + Math.pow(x - ballCenterX, 2);
 			intersectionX = x;
 			intersectionY = paddle.getCurrentY();

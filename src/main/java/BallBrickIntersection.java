@@ -11,10 +11,10 @@ public class BallBrickIntersection {
 	
 	BallBrickIntersection(Ball ball, Brick brick){
 		
-		down(ball, brick);
-		right(ball, brick);
-		left(ball, brick);
-		up(ball, brick);
+		down(ball, brick); //check if ball hits the brick from the down
+		right(ball, brick);//check if ball hits the brick from the right
+		left(ball, brick);//check if ball hits the brick from the left
+		up(ball, brick);//check if ball hits the brick from the up
 	
 		
 	}
@@ -23,7 +23,7 @@ public class BallBrickIntersection {
 		double m =  ball.getCurrentVelocityY() / ball.getCurrentVelocityX();
 		double x =  (((brick.getY() + brick.getHeight() - ball.getCurrentY())) /m + ball.getCurrentX());
 		
-		//down
+		
 		if (ball.getCurrentY() >= brick.getY() + brick.getHeight() && ball.getCurrentY() + ball.getCurrentVelocityY() <= brick.getY() + brick.getHeight() && brick.getX() - ball.getCurrentR() <= x && x<= brick.getX() + brick.getWidth()) {
 			double currentDist = Math.pow(ball.getCurrentY() - brick.getY() - brick.getHeight(), 2) + Math.pow(ball.getCurrentX() - x, 2) ;
 			if (currentDist <= dist) {
@@ -36,7 +36,7 @@ public class BallBrickIntersection {
 	}
 	
 	
-	//fix here. take R into account in the second set of comparisons
+
 	private void right(Ball ball, Brick brick) {
 		double m =  ball.getCurrentVelocityY() /  ball.getCurrentVelocityX();
 		double y =  (m * (brick.getX() + brick.getWidth() - ball.getCurrentX()) + ball.getCurrentY() );

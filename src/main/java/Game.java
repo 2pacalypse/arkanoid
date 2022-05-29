@@ -568,11 +568,12 @@ public class Game {
 	}
 	
 	private void resetGame() {
+		//bring the ball to its starting position.
 		getBall().reset();
 		state = State.ZERO;
+		
+		//bring again the current level selected from options
 		panel.remove(currentLevel.getPanel());
-		
-		
 		currentLevelIdx = options.getSelectedLevelIdx();
 		currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 		try {
@@ -582,6 +583,8 @@ public class Game {
 		}
 		panel.add(currentLevel.getPanel(), 2);
 
+
+		//refresh the lives, reset the score, bring the paddle to its original position.
 		setNumLives(DEFAULT_NUM_LIVES);
 		getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 		currentScore = 0;
@@ -593,6 +596,7 @@ public class Game {
 
 	public void play() {
 		while (numLives > 0) {
+			//wait for user to press SPACE
 			synchronized (lock) {
 				while (getState() == State.START) {
 					try {
@@ -604,6 +608,7 @@ public class Game {
 				}
 			}
 			
+			//move the paddle accordingly if an arrow key is pressed
 			if(arrowMoveRight) {
 				paddle.setCurrentX(paddle.getCurrentX() + 5);
 				paddle.updateBar();
@@ -614,41 +619,45 @@ public class Game {
 				paddle.updateBar();
 			}
 
-
+			//when the backspace is pressed during game, i.e. the game is interrupted, reset the game.
 			if (state == State.INTERRUPTED) {
 				resetGame();
 				return;
 			}
 
+			//when there is no brick left, pass the level
 			if (getCurrentLevel().getBricks().size() == 0) {
 				JOptionPane.showMessageDialog(getPanel(), LEVEL_PASS_TEXT, LEVEL_PASS_TITLE,
 						JOptionPane.INFORMATION_MESSAGE);
 
-				state = State.START;
-				panel.remove(currentLevel.getPanel());
-				currentLevelIdx++;
+				state = State.START; // user has to press space
+				panel.remove(currentLevel.getPanel()); //remove current level
+				currentLevelIdx++; //next level idx
 
 				try {
 					currentLevel = levels.get(currentLevelIdx).call();
 					currentLevelLabel.setText(LEVEL_LABEL_TEXT + currentLevelIdx);
 				} catch (Exception e) {
+					//when there isn't any next level, it means game over.
 					JOptionPane.showMessageDialog(getPanel(), ALL_LEVELS_PASS_TEXT, ALL_LEVELS_PASS_TITLE,
 							JOptionPane.INFORMATION_MESSAGE);
 					break;
 				}
-				panel.add(currentLevel.getPanel(), 2);
-				getBall().reset();
+				panel.add(currentLevel.getPanel(), 2); //load the next level
+				getBall().reset(); //bring the ball to its original position
 				
-				getPaddle().setCurrentX(PADDLE_START_X);
-				getPaddle().updateBar();
+				getPaddle().setCurrentX(PADDLE_START_X); //bring the paddle to its original position
+				getPaddle().updateBar(); //redraw the paddle
 				
-				panel.repaint();
+				panel.repaint(); //redraw the whole scene
 
 				continue;
 			}
 
+			//ball paddle intersection
 			BallPaddleIntersection ballpaddle = new BallPaddleIntersection(ball, paddle);
 
+			//get the closest ball brick intersection
 			Brick closest = null;
 			BallBrickIntersection closestIntersection = null;
 			double closestDist = Float.POSITIVE_INFINITY;
@@ -661,19 +670,21 @@ public class Game {
 				}
 			}
 
+			//if there is a ball brick intersection
 			if (closest != null) {
 				currentScore += 10;
 				currentScoreLabel.setText(SCORE_LABEL_TEXT + currentScore);
 
 				BallBrickIntersection result = closestIntersection;
 				if (result.getSide() == Side.RIGHT) {
-
+					//ball hits the brick from right
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
 					ball.setCurrentVelocityX(-ball.getCurrentVelocityX());
 
 				} else if (result.getSide() == Side.DOWN) {
+					//ball hits the brick from down
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
@@ -681,6 +692,7 @@ public class Game {
 
 
 				} else if (result.getSide() == Side.UP) {
+					//ball hits the brick from up
 					ball.setCurrentX(result.getIntersectionX());
 					ball.setCurrentY(result.getIntersectionY() - ball.getCurrentR());
 					getBall().updateBall();
@@ -688,6 +700,7 @@ public class Game {
 					
 
 				} else if (result.getSide() == Side.LEFT) {
+					//ball hits the brick from left
 					ball.setCurrentX(result.getIntersectionX() - ball.getCurrentR());
 					ball.setCurrentY(result.getIntersectionY());
 					getBall().updateBall();
@@ -695,75 +708,82 @@ public class Game {
 					
 				}
 
-				Brick newBrick = closest.hit();
-				getCurrentLevel().getBricks().remove(closest);
-				getCurrentLevel().getPanel().remove(closest.getLabel());
+				Brick newBrick = closest.hit(); // hitting the closest brick returns another one
+				getCurrentLevel().getBricks().remove(closest); //remove the hit brick
+				getCurrentLevel().getPanel().remove(closest.getLabel()); //remove the hit brick
 				if (newBrick != null) {
-					getCurrentLevel().getBricks().add(newBrick);
-					getCurrentLevel().getPanel().add(newBrick.getLabel());
+					getCurrentLevel().getBricks().add(newBrick); //place the new one if there is
+					getCurrentLevel().getPanel().add(newBrick.getLabel()); //place the new one if there is
 				}
 
 			} else if (ballpaddle.getDist() != Float.POSITIVE_INFINITY) {
+				//if ball hits the paddle
 				double alpha = (ballpaddle.getIntersectionX() - paddle.getCurrentX())
 						/ (double) paddle.getCurrentWidth();
 				double theta = -PADDLE_MAX_ANGLE * (1 - alpha) + PADDLE_MAX_ANGLE * alpha;
 				double magnitude = Math
 						.sqrt(Math.pow(ball.getCurrentVelocityX(), 2) + Math.pow(ball.getCurrentVelocityY(), 2));
 
-				double vx = (magnitude * Math.sin(Math.toRadians(theta)));
-				double vy = -(magnitude * Math.cos(Math.toRadians(theta)));
+				double vx = (magnitude * Math.sin(Math.toRadians(theta))); //calculate the new velocity
+				double vy = -(magnitude * Math.cos(Math.toRadians(theta))); //in x and y
 
 				ball.setCurrentX(ballpaddle.getIntersectionX() - ball.getCurrentR() / 2);
 				ball.setCurrentY(ballpaddle.getIntersectionY() - ball.getCurrentR());
 				ball.setCurrentVelocityY(vy);
 				ball.setCurrentVelocityX(vx);
-				getBall().updateBall();
+				getBall().updateBall();//update the ball velocity and x, y
 			} 
 
 			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() >= BOARD_WIDTH - getBall().getCurrentR()) {
+				//ball hits the right wall
 				getBall().setCurrentX(600 - getBall().getCurrentR());
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 				getBall().updateBall();
 			}
 			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() <= 0) {
+				//ball hits the upper wall
 				getBall().setCurrentY(0);
 				getBall().setCurrentVelocityY(-getBall().getCurrentVelocityY());
 				getBall().updateBall();
 			}
 			else if (getBall().getCurrentX() + getBall().getCurrentVelocityX() <= 0) {
+				//ball hits the left wall
 				getBall().setCurrentX(0);
 				getBall().setCurrentVelocityX(-getBall().getCurrentVelocityX());
 				getBall().updateBall();
 			}
 
 			else if (getBall().getCurrentY() + getBall().getCurrentVelocityY() >= BOARD_HEIGHT) {
-				setNumLives(getNumLives() - 1);
-				getBall().reset();
+				//die when ball hits the lower wall
+				setNumLives(getNumLives() - 1); //lose 1 life
+				getBall().reset(); //reset the başş
 				getPaddle().setCurrentX(PADDLE_START_X);
-				getPaddle().updateBar();
-				setState(State.START);
+				getPaddle().updateBar();//reset the paddle
+				setState(State.START); //wait for space to be pressed
 				getNumLivesLabel().setText(NUM_LIVES_LABEL_TEXT + numLives);
 
 			}
 			else {
+				//when there isn't any collision, just move the ball
 				getBall().setCurrentX((getBall().getCurrentX() + getBall().getCurrentVelocityX()));
 				getBall().setCurrentY((getBall().getCurrentY() + getBall().getCurrentVelocityY()));
 				getBall().updateBall();
 			}
 
-			getPanel().repaint();
+			getPanel().repaint(); //redraw to frame
 			
 
 			try {
-				Thread.sleep(GAME_CYCLE_SLEEP_MS);
+				Thread.sleep(GAME_CYCLE_SLEEP_MS); //how frequent we update the frame
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 
 		}
-
+		//while loop terminated, it means game over.
 		String name = JOptionPane.showInputDialog(getPanel(), GAME_OVER_MESSAGE, GAME_OVER_TITLE,
 				JOptionPane.INFORMATION_MESSAGE);
+		//force user to enter name, no empty name allowed
 		while (name == null || name.isEmpty()) {
 			JOptionPane.showMessageDialog(getPanel(), USERNAME_NOT_PROVIDED_MESSAGE, USERNAME_NOT_PROVIDED_TITLE, JOptionPane.ERROR_MESSAGE);
 			name = JOptionPane.showInputDialog(getPanel(), GAME_OVER_MESSAGE, GAME_OVER_TITLE,
@@ -772,7 +792,7 @@ public class Game {
 		scores.addScore(name, currentScore);
 		((CardLayout) (cards.getLayout())).show(cards, CARDLAYOUT_SCORES);
 
-		resetGame();
+		resetGame(); // reset the game upon exit
 	}
 
 	public int getNumLives() {
