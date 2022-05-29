@@ -46,7 +46,7 @@ The collision detection is not hard to implement but it's not trivial too. In a 
 
 
 <p align="center" width="100%">
-    <img src="images/game.gif" align="center" />
+    <img src="images/game.gif" align="center" width="400" />
 </p>
 
 As stated previously, there are 3 different pages in the game (Play, Options, Scores). The rest (Help, About, Exit) show texts as dialogs. In the Play section, the level is started as soon as the user hits space key. They can then use their mouse or arrow keys to move the paddle. The number of lives, score, and the current level is indicated at the top. The player may decide to hit backspace to stop playing at any time. They cannot continue playing, however, from the point they abandoned the game. They have to start a new game by clicking Play again. A pop-up appears when a level is cleared, or all levels are cleared, or the user has no more lives left. When a level is cleared, the next level is automatically loaded and again user has to press space to start the level. When game is over (no more lives, or no more levels), the game prompts the user to enter a name to store their score. 
