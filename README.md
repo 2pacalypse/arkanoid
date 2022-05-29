@@ -31,7 +31,7 @@ When the user clicks Play, the loop responsible for playing the game is started 
 
 Setting up the main structure like this, the rest was a little bit physics and analytic geometry. Basically, there is physics involved when the ball hits either the paddle, the walls, or the bricks. One has to make design decisions about what happens when there is a collision. In this project, we enable the paddle to control the angle when the ball bounces.
 
-![](images\paddle.gif)
+![](./images\paddle.gif)
 
 The figure is taken from http://chrisdecoro.com/RealTimeGraphics/hw3writeup/RTG_HW3.htm. This assigns different velocity vectors to the ball depending on where the ball hits the paddle. It adds randomness to the game and gives control to the player. Otherwise the game would be boring if the paddle just reflected the ball with the same angle every time.
 
@@ -39,7 +39,7 @@ The collision detection is not hard to implement but it's not trivial too. In a 
 
 ## Gameplay
 
-![](images\game.gif)
+![](./images\game.gif)
 
 As stated previously, there are 3 different pages in the game (Play, Options, Scores). The rest (Help, About, Exit) show texts as dialogs. In the Play section, the level is started as soon as the user hits space key. They can then use their mouse or arrow keys to move the paddle. The number of lives, score, and the current level is indicated at the top. The player may decide to hit backspace to stop playing at any time. They cannot continue playing, however, from the point they abandoned the game. They have to start a new game by clicking Play again. A pop-up appears when a level is cleared, or all levels are cleared, or the user has no more lives left. When a level is cleared, the next level is automatically loaded and again user has to press space to start the level. When game is over (no more lives, or no more levels), the game prompts the user to enter a name to store their score. 
 
